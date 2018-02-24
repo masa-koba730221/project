@@ -2,3 +2,5 @@
 
 /usr/local以下の権限を変更する
 sudo chown -R mkoba /usr/local
+
+Test
