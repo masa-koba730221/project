@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="Kobama.Xam.PrismApp.Views.MainPage"
+            xmlns:local="clr-namespace:Kobama.Xam.Plugin.CameraPreview;assembly=Kobama.Xam.Plugin.CameraPreview"
+            xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"             
+            prism:ViewModelLocator.AutowireViewModel="True"
+            Padding="0,0,0,0"
+            Title="{Binding Title}"
+            >
+    <ContentPage.ToolbarItems> 
+        <ToolbarItem Text="{Binding TitleLensButton}" Command="{Binding CommandChangeLens}"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <local:CameraPreviewView x:Name="preview" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
