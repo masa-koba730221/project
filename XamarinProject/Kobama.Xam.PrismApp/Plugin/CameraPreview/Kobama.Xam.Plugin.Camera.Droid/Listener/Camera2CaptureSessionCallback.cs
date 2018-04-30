@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="Camera2CaptureSessionCallback.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="Camera2CaptureSessionCallback.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 namespace Kobama.Xam.Plugin.Camera.Droid.Listener
@@ -27,12 +27,12 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="T:Kobama.Xam.Plugin.Camera.Droid.Listener.Camera2CaptureSessionCallback"/> class.
+        /// <see cref="Camera2CaptureSessionCallback"/> class.
         /// </summary>
         /// <param name="owner">Owner.</param>
         public Camera2CaptureSessionCallback(Camera2 owner)
         {
-            this.logger.CallMethod();
+            this.logger.CalledMethod();
             if (owner == null)
             {
                 throw new System.ArgumentNullException("owner");
@@ -47,7 +47,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <param name="session">Session.</param>
         public override void OnConfigureFailed(CameraCaptureSession session)
         {
-            this.logger.CallMethod();
+            this.logger.CalledMethod();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <param name="session">Session.</param>
         public override void OnConfigured(CameraCaptureSession session)
         {
-            this.logger.CallMethod();
+            this.logger.CalledMethod();
 
             // The camera is already closed
             if (this.owner.mCameraDevice == null)
@@ -71,16 +71,15 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                 // Auto focus should be continuous for camera preview.
                 this.owner.mPreviewRequestBuilder.Set(CaptureRequest.ControlAfMode, (int)ControlAFMode.ContinuousPicture);
 
-//                var list = this.owner.GetFpsRangeList();
-
+                // var list = this.owner.GetFpsRangeList();
                 this.owner.mPreviewRequestBuilder.Set(CaptureRequest.ControlAeTargetFpsRange, new Range(15, 15));
 
                 // Flash is automatically enabled when necessary.
-                this.owner.SetAutoFlash(owner.mPreviewRequestBuilder);
+                this.owner.SetAutoFlash(this.owner.mPreviewRequestBuilder);
 
                 // Finally, we start displaying the camera preview.
-                this.owner.mCaptureSession.SetRepeatingRequest(owner.mPreviewRequestBuilder.Build(), owner.mCaptureCallback, owner.mBackgroundHandler);
-                this.owner.mCaptureSession.Capture(owner.mPreviewRequestBuilder.Build(), owner.mCaptureCallback, owner.mBackgroundHandler);
+                this.owner.mCaptureSession.SetRepeatingRequest(this.owner.mPreviewRequestBuilder.Build(), this.owner.mCaptureCallback, this.owner.mBackgroundHandler);
+                this.owner.mCaptureSession.Capture(this.owner.mPreviewRequestBuilder.Build(), this.owner.mCaptureCallback, this.owner.mBackgroundHandler);
             }
             catch (CameraAccessException e)
             {

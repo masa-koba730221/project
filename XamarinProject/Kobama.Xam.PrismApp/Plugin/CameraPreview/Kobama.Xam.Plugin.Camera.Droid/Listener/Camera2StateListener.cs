@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="Camera2StateListener.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="Camera2StateListener.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 namespace Kobama.Xam.Plugin.Camera.Droid.Listener
@@ -27,12 +27,12 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="T:Kobama.Xam.Plugin.Camera.Droid.Listener.Camera2StateListener"/> class.
+        /// <see cref="Camera2StateListener"/> class.
         /// </summary>
         /// <param name="owner">Owner.</param>
         public Camera2StateListener(Camera2 owner)
         {
-            this.logger.CallMethod();
+            this.logger.CalledMethod();
             if (owner == null)
             {
                 throw new System.ArgumentNullException("owner");
@@ -47,12 +47,12 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <param name="camera">Camera device.</param>
         public override void OnOpened(CameraDevice camera)
         {
-            this.logger.CallMethod();
+            this.logger.CalledMethod();
 
             // This method is called when the camera is opened.  We start camera preview here.
-            owner.mCameraOpenCloseLock.Release();
-            owner.mCameraDevice = camera;
-            owner.CreateCameraPreviewSession();
+            this.owner.mCameraOpenCloseLock.Release();
+            this.owner.mCameraDevice = camera;
+            this.owner.CreateCameraPreviewSession();
         }
 
         /// <summary>
@@ -61,10 +61,10 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <param name="camera">Camera device.</param>
         public override void OnDisconnected(CameraDevice camera)
         {
-            this.logger.CallMethod();
-            owner.mCameraOpenCloseLock.Release();
+            this.logger.CalledMethod();
+            this.owner.mCameraOpenCloseLock.Release();
             camera.Close();
-            owner.mCameraDevice = null;
+            this.owner.mCameraDevice = null;
         }
 
         /// <summary>
@@ -74,16 +74,16 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <param name="error">Error.</param>
         public override void OnError(CameraDevice camera, CameraError error)
         {
-            this.logger.CallMethod();
-            owner.mCameraOpenCloseLock.Release();
+            this.logger.CalledMethod();
+            this.owner.mCameraOpenCloseLock.Release();
             camera.Close();
-            owner.mCameraDevice = null;
-            if (owner == null)
+            this.owner.mCameraDevice = null;
+            if (this.owner == null)
             {
                 return;
             }
 
-            Activity activity = (Activity)owner.Context;
+            Activity activity = (Activity)this.owner.Context;
             if (activity != null)
             {
                 activity.Finish();

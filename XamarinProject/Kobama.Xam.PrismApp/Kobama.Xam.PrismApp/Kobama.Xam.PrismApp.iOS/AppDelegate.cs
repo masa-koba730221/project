@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="AppDelegate.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="AppDelegate.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 #pragma warning disable SA1300
@@ -36,7 +36,7 @@ namespace Kobama_Xam_PrismApp.iOS
 
             CameraPreviewRenderer.Initalize();
 
-            LoadApplication(new App(new iOSInitializer()));
+            this.LoadApplication(new App(new Initializer()));
 
             return base.FinishedLaunching(app, options);
         }
@@ -44,7 +44,7 @@ namespace Kobama_Xam_PrismApp.iOS
         /// <summary>
         /// iOS Initializer.
         /// </summary>
-        protected class iOSInitializer : IPlatformInitializer
+        protected class Initializer : IPlatformInitializer
         {
             /// <summary>
             /// Registers the types.

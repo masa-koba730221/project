@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="Application.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="Application.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 #pragma warning disable SA1300

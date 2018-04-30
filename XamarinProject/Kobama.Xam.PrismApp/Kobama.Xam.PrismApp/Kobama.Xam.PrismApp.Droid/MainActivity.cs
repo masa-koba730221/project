@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="MainActivity.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="MainActivity.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 namespace Kobama.Xam.PrismApp.Droid
@@ -20,7 +20,7 @@ namespace Kobama.Xam.PrismApp.Droid
     /// <summary>
     /// Main activity.
     /// </summary>
-    [Activity(Label = "Kobama_Xam_PrimsApp", Icon = "@mipmap/ic_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Kobama_Xam_PrimsApp", Icon = "@drawable/ic_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         /// <summary>
@@ -29,8 +29,8 @@ namespace Kobama.Xam.PrismApp.Droid
         /// <param name="bundle">Bundle </param>
         protected override void OnCreate(Bundle bundle)
         {
-            TabLayoutResource = Resource.Layout.Tabbar;
-            ToolbarResource = Resource.Layout.Toolbar;
+            TabLayoutResource = Kobama.Xam.PrimsApp.Droid.Resource.Layout.Tabbar;
+            ToolbarResource = Kobama.Xam.PrimsApp.Droid.Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
 

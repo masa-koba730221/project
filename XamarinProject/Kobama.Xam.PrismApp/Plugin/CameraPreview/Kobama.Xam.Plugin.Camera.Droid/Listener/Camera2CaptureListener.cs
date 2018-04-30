@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="Camera2CaptureListener.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="Camera2CaptureListener.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 namespace Kobama.Xam.Plugin.Camera.Droid.Listener
@@ -28,12 +28,12 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="T:Kobama.Xam.Plugin.Camera.Droid.Listener.Camera2CaptureListener"/> class.
+        /// <see cref="Camera2CaptureListener"/> class.
         /// </summary>
         /// <param name="owner">Owner.</param>
         public Camera2CaptureListener(Camera2 owner)
         {
-            this.logger.CallMethod();
+            this.logger.CalledMethod();
             if (owner == null)
             {
                 throw new System.ArgumentNullException("owner");
@@ -50,7 +50,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <param name="result">Result.</param>
         public override void OnCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result)
         {
-            Process(result);
+            this.Process(result);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <param name="partialResult">Partial result.</param>
         public override void OnCaptureProgressed(CameraCaptureSession session, CaptureRequest request, CaptureResult partialResult)
         {
-            Process(partialResult);
+            this.Process(partialResult);
         }
 
         /// <summary>
@@ -70,29 +70,29 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <param name="result">Result.</param>
         private void Process(CaptureResult result)
         {
-            switch (owner.State)
+            switch (this.owner.State)
             {
                 case CameraState.STATE_WAITING_LOCK:
                     {
                         Integer afState = (Integer)result.Get(CaptureResult.ControlAfState);
                         if (afState == null)
                         {
-                            owner.CaptureStillPicture();
+                            this.owner.CaptureStillPicture();
                         }
-                        else if ((((int)ControlAFState.FocusedLocked) == afState.IntValue()) ||
-                                   (((int)ControlAFState.NotFocusedLocked) == afState.IntValue()))
+                        else if ((afState.IntValue() == ((int)ControlAFState.FocusedLocked)) ||
+                                   (afState.IntValue() == ((int)ControlAFState.NotFocusedLocked)))
                         {
                             // ControlAeState can be null on some devices
                             Integer aeState = (Integer)result.Get(CaptureResult.ControlAeState);
                             if (aeState == null ||
                                     aeState.IntValue() == ((int)ControlAEState.Converged))
                             {
-                                owner.State = CameraState.STATE_PICTURE_TAKEN;
-                                owner.CaptureStillPicture();
+                                this.owner.State = CameraState.STATE_PICTURE_TAKEN;
+                                this.owner.CaptureStillPicture();
                             }
                             else
                             {
-                                owner.RunPrecaptureSequence();
+                                this.owner.RunPrecaptureSequence();
                             }
                         }
 
@@ -107,7 +107,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                                 aeState.IntValue() == ((int)ControlAEState.Precapture) ||
                                 aeState.IntValue() == ((int)ControlAEState.FlashRequired))
                         {
-                            owner.State = CameraState.STATE_WAITING_NON_PRECAPTURE;
+                            this.owner.State = CameraState.STATE_WAITING_NON_PRECAPTURE;
                         }
 
                         break;
@@ -119,8 +119,8 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                         Integer aeState = (Integer)result.Get(CaptureResult.ControlAeState);
                         if (aeState == null || aeState.IntValue() != ((int)ControlAEState.Precapture))
                         {
-                            owner.State = CameraState.STATE_PICTURE_TAKEN;
-                            owner.CaptureStillPicture();
+                            this.owner.State = CameraState.STATE_PICTURE_TAKEN;
+                            this.owner.CaptureStillPicture();
                         }
 
                         break;

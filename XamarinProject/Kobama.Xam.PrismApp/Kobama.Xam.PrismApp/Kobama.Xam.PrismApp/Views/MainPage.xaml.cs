@@ -1,14 +1,12 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="MainPage.xaml.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="MainPage.xaml.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 namespace Kobama.Xam.PrismApp.Views
 {
     using System.Diagnostics;
-    using Kobama.Xam.Plugin.Camera;
-    using Kobama.Xam.Plugin.CameraPreview;
     using Kobama.Xam.PrismApp.ViewModels;
     using Xamarin.Forms;
 
@@ -18,7 +16,7 @@ namespace Kobama.Xam.PrismApp.Views
     public partial class MainPage : ContentPage, Prism.AppModel.IApplicationLifecycleAware
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Kobama.Xam.PrimsApp.Views.MainPage"/> class.
+        /// Initializes a new instance of the <see cref="MainPage"/> class.
         /// </summary>
         public MainPage()
         {
@@ -29,7 +27,7 @@ namespace Kobama.Xam.PrismApp.Views
         /// Gets the vm.
         /// </summary>
         /// <value>The vm.</value>
-        private ViewModelBase vm => this.BindingContext as ViewModelBase;
+        private ViewModelBase VM => this.BindingContext as ViewModelBase;
 
         /// <summary>
         /// Ons the resume.
@@ -37,7 +35,7 @@ namespace Kobama.Xam.PrismApp.Views
         public void OnResume()
         {
             Debug.WriteLine("MainPage: OnResume");
-            vm?.OnResume();
+            this.VM?.OnResume();
         }
 
         /// <summary>
@@ -46,7 +44,7 @@ namespace Kobama.Xam.PrismApp.Views
         public void OnSleep()
         {
             Debug.WriteLine("MainPage: OnSleep");
-            vm?.OnSleep();
+            this.VM?.OnSleep();
         }
 
         /// <summary>

@@ -1,10 +1,9 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="App.xaml.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="App.xaml.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
-using Kobama.Xam.PrismApp.ViewModels;
 using Kobama.Xam.PrismApp.Views;
 using Prism;
 using Prism.DryIoc;
@@ -21,22 +20,22 @@ namespace Kobama.Xam.PrismApp
     /// </summary>
     public partial class App : PrismApplication
     {
-        /* 
+        /*
          * The Xamarin Forms XAML Previewer in Visual Studio uses System.Activator.CreateInstance.
-         * This imposes a limitation in which the App class must have a default constructor. 
+         * This imposes a limitation in which the App class must have a default constructor.
          * App(IPlatformInitializer initializer = null) cannot be handled by the Activator.
          */
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Kobama.Xam.PrimsApp.App"/> class.
+        /// Initializes a new instance of the <see cref="App"/> class.
         /// </summary>
         public App()
-            : this(null) 
+            : this(null)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Kobama.Xam.PrimsApp.App"/> class.
+        /// Initializes a new instance of the <see cref="App"/> class.
         /// </summary>
         /// <param name="initializer">Initializer.</param>
         public App(IPlatformInitializer initializer)
@@ -51,7 +50,7 @@ namespace Kobama.Xam.PrismApp
         {
             this.InitializeComponent();
 
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            await this.NavigationService.NavigateAsync("MyMasterDetailPage/NavigationPage/MainPage");
         }
 
         /// <summary>
@@ -60,8 +59,11 @@ namespace Kobama.Xam.PrismApp
         /// <param name="containerRegistry">Container registry.</param>
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterForNavigation<MyMasterDetailPage>();
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
+            containerRegistry.RegisterForNavigation<QRCodeTestPage>();
+            containerRegistry.RegisterForNavigation<QRCodeReaderPage>();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="Camera2CaptureStillPictureSessionCallback.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="Camera2CaptureStillPictureSessionCallback.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 namespace Kobama.Xam.Plugin.Camera.Droid.Listener
@@ -27,7 +27,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="T:Kobama.Xam.Plugin.Camera.Droid.Listener.Camera2CaptureStillPictureSessionCallback"/> class.
+        /// <see cref="Camera2CaptureStillPictureSessionCallback"/> class.
         /// </summary>
         /// <param name="owner">Owner.</param>
         public Camera2CaptureStillPictureSessionCallback(Camera2 owner)
@@ -48,11 +48,11 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <param name="result">Result.</param>
         public override void OnCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result)
         {
-            // If something goes wrong with the save (or the handler isn't even 
+            // If something goes wrong with the save (or the handler isn't even
             // registered, this code will toast a success message regardless...)
             //            owner.ShowToast("Saved: " + owner.mFile);
-            this.logger.CallMethod(owner.mFile.ToString());
-            owner.UnlockFocus();
+            this.logger.CalledMethod(this.owner.mFile.ToString());
+            this.owner.UnlockFocus();
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="ViewModelBase.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="ViewModelBase.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 namespace Kobama.Xam.PrismApp.ViewModels
 {
+    using Kobama.Xam.Plugin.Log;
     using Prism.AppModel;
     using Prism.Mvvm;
     using Prism.Navigation;
@@ -16,18 +17,19 @@ namespace Kobama.Xam.PrismApp.ViewModels
     public class ViewModelBase : BindableBase, INavigationAware, IDestructible, IApplicationLifecycleAware
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Kobama.Xam.PrimsApp.ViewModels.ViewModelBase"/> class.
+        /// The title.
+        /// </summary>
+        private string title;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewModelBase"/> class.
         /// </summary>
         /// <param name="navigationService">Navigation service.</param>
         public ViewModelBase(INavigationService navigationService)
         {
             this.NavigationService = navigationService;
+            this.Logger = new Logger(this.ToString());
         }
-
-        /// <summary>
-        /// The title.
-        /// </summary>
-        private string title;
 
         /// <summary>
         /// Gets or sets the title.
@@ -38,6 +40,14 @@ namespace Kobama.Xam.PrismApp.ViewModels
             get { return this.title; }
             set { this.SetProperty(ref this.title, value); }
         }
+
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
+        /// <value>
+        /// The logger.
+        /// </value>
+        public Logger Logger { get; set; }
 
         /// <summary>
         /// Gets the navigation service.
@@ -87,6 +97,20 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// Ons the sleep.
         /// </summary>
         public virtual void OnSleep()
+        {
+        }
+
+        /// <summary>
+        /// Ons the appearing.
+        /// </summary>
+        public virtual void OnAppearing()
+        {
+        }
+
+        /// <summary>
+        /// Ons the disappearing.
+        /// </summary>
+        public virtual void OnDisappearing()
         {
         }
     }

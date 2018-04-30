@@ -1,30 +1,15 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="Camera2.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
-// -----------------------------------------------------------------------
-
-// -----------------------------------------------------------------------
-//  <copyright file="Camera2.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
-// -----------------------------------------------------------------------
-
-// -----------------------------------------------------------------------
-//  <copyright file="Camera2.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="Camera2.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 namespace Kobama.Xam.Plugin.Camera.Droid
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
-    using Android;
     using Android.App;
     using Android.Content;
-    using Android.Content.PM;
     using Android.Graphics;
     using Android.Hardware.Camera2;
     using Android.Hardware.Camera2.Params;
@@ -32,7 +17,6 @@ namespace Kobama.Xam.Plugin.Camera.Droid
     using Android.OS;
     using Android.Util;
     using Android.Views;
-    using Android.Widget;
     using Java.IO;
     using Java.Lang;
     using Java.Util;
@@ -180,7 +164,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         private Camera2()
         {
-            Log.CallMethod();
+            Log.CalledMethod();
 
             // fill ORIENTATIONS list
             ORIENTATIONS.Append((int)SurfaceOrientation.Rotation0, 90);
@@ -247,6 +231,12 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             get { return instance; }
         }
 
+        /// <summary>
+        /// Gets or sets the image mode.
+        /// </summary>
+        /// <value>
+        /// The image mode.
+        /// </value>
         public ImageAvailableMode ImageMode { get; set; } = ImageAvailableMode.Auto;
 
         /// <summary>
@@ -267,7 +257,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             int maxHeight,
             Android.Util.Size aspectRatio)
         {
-            Log.CallMethod();
+            Log.CalledMethod();
 
             // Collect the supported resolutions that are at least as big as the preview Surface
             var bigEnough = new List<Android.Util.Size>();
@@ -307,7 +297,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             }
             else
             {
-                Log.Err("Couldn't find any suitable preview size");
+                Log.Error("Couldn't find any suitable preview size");
                 return choices[0];
             }
         }
@@ -317,7 +307,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         public void OnResume()
         {
-            Log.CallMethod();
+            Log.CalledMethod();
 
             this.StartBackgroundThread();
 
@@ -327,7 +317,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             }
             else
             {
-                Log.CallMethod("TextureView is invalid");
+                Log.CalledMethod("TextureView is invalid");
             }
         }
 
@@ -336,7 +326,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         public void OnPause()
         {
-            Log.CallMethod();
+            Log.CalledMethod();
             this.CloseCamera();
             this.StopBackgroundThread();
         }
@@ -346,11 +336,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         public void OnDestroy()
         {
-            if (this.mContext != null)
-            {
-                this.OnPause();
-                this.mContext = null;
-            }
+            this.OnPause();
         }
 
         /// <summary>
@@ -370,7 +356,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
                     requestLens = LensFacing.Front;
                     break;
                 default:
-                    Log.Err($"Error Argument:{lens}");
+                    Log.Error($"Error Argument:{lens}");
                     return;
             }
 
@@ -411,11 +397,11 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             }
             catch (CameraAccessException e)
             {
-                Log.Err(e.ToString());
+                Log.Error(e.ToString());
             }
             catch (NullPointerException e)
             {
-                Log.Err(e.ToString());
+                Log.Error(e.ToString());
             }
 
             this.mCameraCharacteristics = null;
@@ -469,7 +455,8 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             }
 
             var formats = map.GetOutputFormats();
-            foreach(var format in formats){
+            foreach (var format in formats)
+            {
                 Log.Debug($"Image output format:{format}");
             }
 
@@ -520,7 +507,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             return ((Activity)this.mContext).WindowManager.DefaultDisplay.Rotation;
         }
 
-        /// inherit
+        /// <inheritdoc/>
         public List<System.Drawing.Size> GetSizeList()
         {
             if (this.mCameraCharacteristics == null)
@@ -536,13 +523,20 @@ namespace Kobama.Xam.Plugin.Camera.Droid
 
             var list = map.GetOutputSizes((int)ImageFormatType.Jpeg);
             var systemList = new List<System.Drawing.Size>();
-            foreach (var s in list){
+            foreach (var s in list)
+            {
                 systemList.Add(new System.Drawing.Size(s.Width, s.Height));
             }
 
             return systemList;
         }
 
+        /// <summary>
+        /// Gets the fps range list.
+        /// </summary>
+        /// <returns>
+        /// The fps range list.
+        /// </returns>
         public List<CameraFpsRange> GetFpsRangeList()
         {
             if (this.mCameraCharacteristics == null)
@@ -571,6 +565,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// Initializes a new instance of the <see cref="T:Kobama.Xam.Plugin.Camera.Droid.Camera2"/> class.
         /// </summary>
         /// <param name="image">Image.</param>
+        /// <param name="size">Size</param>
         public void NotifySavedIamage(byte[] image, System.Drawing.Size size)
         {
             this.CallbackSavedImage.Invoke(image, size);
@@ -597,7 +592,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// <param name="height">Height.</param>
         private void SetUpCameraOutputs(int width, int height)
         {
-            Log.CallMethod($"width:{width} height:{height}");
+            Log.CalledMethod($"width:{width} height:{height}");
 
             var activity = (Activity)this.mContext;
             var manager = (CameraManager)activity.GetSystemService(Context.CameraService);
@@ -668,16 +663,16 @@ namespace Kobama.Xam.Plugin.Camera.Droid
 
                 Log.Debug($"View: {rotatedPreviewWidth},{rotatedPreviewHeight}  MaxSize:{maxPreviewWidth},{maxPreviewHeight} Aspect:{largest.Width},{largest.Height}");
                 this.mPreviewSize = ChooseOptimalSize(map.GetOutputSizes(Class.FromType(typeof(SurfaceTexture))), rotatedPreviewWidth, rotatedPreviewHeight, maxPreviewWidth, maxPreviewHeight, largest);
-                Log.Debug($"PreviewSize: {mPreviewSize.Width},{mPreviewSize.Height}");
+                Log.Debug($"PreviewSize: {this.mPreviewSize.Width},{this.mPreviewSize.Height}");
                 return;
             }
             catch (CameraAccessException e)
             {
-                Log.Err(e.ToString());
+                Log.Error(e.ToString());
             }
             catch (NullPointerException e)
             {
-                Log.Err(e.ToString());
+                Log.Error(e.ToString());
             }
         }
 
@@ -688,7 +683,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// <param name="height">Height.</param>
         public void OpenCamera(int width, int height)
         {
-            Log.CallMethod($"width:{width} heiht:{height}");
+            Log.CalledMethod($"width:{width} heiht:{height}");
 
             // if (ContextCompat.CheckSelfPermission(Activity, Manifest.Permission.Camera) != Permission.Granted)
             // {
@@ -727,7 +722,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         public void CloseCamera()
         {
-            Log.CallMethod();
+            Log.CalledMethod();
             try
             {
                 this.mCameraOpenCloseLock.Acquire();
@@ -766,7 +761,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         {
             if (this.mBackgroundThread == null)
             {
-                Log.CallMethod();
+                Log.CalledMethod();
                 this.mBackgroundThread = new HandlerThread("CameraBackground");
                 this.mBackgroundThread.Start();
                 this.mBackgroundHandler = new Handler(this.mBackgroundThread.Looper);
@@ -780,7 +775,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         {
             if (this.mBackgroundThread != null)
             {
-                Log.CallMethod();
+                Log.CalledMethod();
                 this.mBackgroundThread.QuitSafely();
                 try
                 {
@@ -800,7 +795,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         public void CreateCameraPreviewSession()
         {
-            Log.CallMethod();
+            Log.CalledMethod();
             try
             {
                 SurfaceTexture texture = this.mTextureView.SurfaceTexture;
@@ -810,7 +805,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
                 }
 
                 //// We configure the size of default buffer to be the size of camera preview we want.
-                Log.CallMethod($"BufferSize width:{this.mPreviewSize.Width} height:{this.mPreviewSize.Height}");
+                Log.CalledMethod($"BufferSize width:{this.mPreviewSize.Width} height:{this.mPreviewSize.Height}");
                 texture.SetDefaultBufferSize(this.mPreviewSize.Width, this.mPreviewSize.Height);
 
                 // This is the output Surface we need to start preview.
@@ -821,14 +816,15 @@ namespace Kobama.Xam.Plugin.Camera.Droid
 
                 this.mPreviewRequestBuilder.AddTarget(surface);
 
-                if (this.ImageMode == ImageAvailableMode.EachFrame){
+                if (this.ImageMode == ImageAvailableMode.EachFrame)
+                {
                     this.mImageReader = this.GetImageReaderForEachFrame(this.mBackgroundHandler, new ImageAvailableListener(this, this.mFile));
                     this.mPreviewRequestBuilder.AddTarget(this.mImageReader.Surface);
                 }
 
-                //var activity = (Activity)this.mContext;
-                //int rotation = (int)activity.WindowManager.DefaultDisplay.Rotation;
-                //this.mPreviewRequestBuilder.Set(CaptureRequest.JpegOrientation, this.GetOrientation(rotation));
+                // var activity = (Activity)this.mContext;
+                // int rotation = (int)activity.WindowManager.DefaultDisplay.Rotation;
+                // this.mPreviewRequestBuilder.Set(CaptureRequest.JpegOrientation, this.GetOrientation(rotation));
 
                 // Here, we create a CameraCaptureSession for camera preview.
                 var surfaces = new List<Surface>();
@@ -841,7 +837,6 @@ namespace Kobama.Xam.Plugin.Camera.Droid
                 e.PrintStackTrace();
             }
         }
-
 
         /// <summary>
         /// Cast the specified obj.
@@ -865,7 +860,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// <param name="viewHeight">View height.</param>
         public void ConfigureTransform(int viewWidth, int viewHeight)
         {
-            Log.CallMethod($"viewWidth:{viewWidth} viewHeight:{viewHeight}");
+            Log.CalledMethod($"viewWidth:{viewWidth} viewHeight:{viewHeight}");
 
             Android.Util.Size previewSize;
             Activity activity = (Activity)this.mContext;
@@ -897,14 +892,14 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             bufferRect.Offset(centerX - bufferRect.CenterX(), centerY - bufferRect.CenterY());
             matrix.SetRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.Fill);
             float scale = Math.Max((float)viewHeight / previewSize.Height, (float)viewWidth / previewSize.Width);
-            Log.CallMethod($"Scale:{scale}");
+            Log.CalledMethod($"Scale:{scale}");
             matrix.PostScale(scale, scale, centerX, centerY);
 
-            if ((int)SurfaceOrientation.Rotation90 == rotation || (int)SurfaceOrientation.Rotation270 == rotation)
+            if (rotation == (int)SurfaceOrientation.Rotation90 || rotation == (int)SurfaceOrientation.Rotation270)
             {
                 matrix.PostRotate(90 * (rotation - 2), centerX, centerY);
             }
-            else if ((int)SurfaceOrientation.Rotation180 == rotation)
+            else if (rotation == (int)SurfaceOrientation.Rotation180)
             {
                 matrix.PostRotate(180, centerX, centerY);
             }
@@ -916,31 +911,31 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             this.mTextureView.SetTransform(matrix);
         }
 
-
+        /// <summary>
+        /// Qrs the code reader.
+        /// </summary>
         public void QRCodeReader()
         {
             // Auto focus should be continuous for camera preview.
             this.mPreviewRequestBuilder.Set(CaptureRequest.ControlAfMode, (int)ControlAFMode.ContinuousPicture);
 
-            //                var list = this.owner.GetFpsRangeList();
-
+            // var list = this.owner.GetFpsRangeList();
             this.mPreviewRequestBuilder.Set(CaptureRequest.ControlAeTargetFpsRange, new Range(15, 15));
 
             // Flash is automatically enabled when necessary.
-            this.SetAutoFlash(mPreviewRequestBuilder);
+            this.SetAutoFlash(this.mPreviewRequestBuilder);
 
             // Finally, we start displaying the camera preview.
-            this.mCaptureSession.SetRepeatingRequest(mPreviewRequestBuilder.Build(), mCaptureCallback, mBackgroundHandler);
-            this.mCaptureSession.Capture(mPreviewRequestBuilder.Build(), mCaptureCallback, mBackgroundHandler);
+            this.mCaptureSession.SetRepeatingRequest(this.mPreviewRequestBuilder.Build(), this.mCaptureCallback, this.mBackgroundHandler);
+            this.mCaptureSession.Capture(this.mPreviewRequestBuilder.Build(), this.mCaptureCallback, this.mBackgroundHandler);
         }
-
 
         /// <summary>
         /// Initiate a still image capture.
         /// </summary>
         public void TakePicture()
         {
-            Log.CallMethod();
+            Log.CalledMethod();
             this.LockFocus();
         }
 
@@ -949,7 +944,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         private void LockFocus()
         {
-            Log.CallMethod();
+            Log.CalledMethod();
             try
             {
                 // This is how to tell the camera to lock focus.
@@ -971,7 +966,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         public void RunPrecaptureSequence()
         {
-            Log.CallMethod();
+            Log.CalledMethod();
             try
             {
                 // This is how to tell the camera to trigger.
@@ -992,7 +987,14 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         private CaptureRequest.Builder stillCaptureBuilder;
 
+        /// <summary>
+        /// Occurs when callback saved image.
+        /// </summary>
         public event SavedImage CallbackSavedImage;
+
+        /// <summary>
+        /// Occurs when callabck opened.
+        /// </summary>
         public event Opened CallabckOpened;
 
         /// <summary>
@@ -1001,7 +1003,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         public void CaptureStillPicture()
         {
-            Log.CallMethod();
+            Log.CalledMethod();
             try
             {
                 var activity = (Activity)this.mContext;
@@ -1042,7 +1044,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// <param name="rotation">Rotation.</param>
         private int GetOrientation(int rotation)
         {
-            Log.CallMethod();
+            Log.CalledMethod();
 
             // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
             // We have to take that into account and rotate JPEG properly.
@@ -1057,7 +1059,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         public void UnlockFocus()
         {
-            Log.CallMethod();
+            Log.CalledMethod();
             try
             {
                 // Reset the auto-focus trigger
@@ -1081,13 +1083,18 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// <param name="requestBuilder">Request builder.</param>
         public void SetAutoFlash(CaptureRequest.Builder requestBuilder)
         {
-            Log.CallMethod();
+            Log.CalledMethod();
             if (this.IsSupportedFlash())
             {
                 requestBuilder.Set(CaptureRequest.ControlAeMode, (int)ControlAEMode.OnAutoFlash);
             }
         }
 
+        /// <summary>
+        /// Sets the option AE mode.
+        /// </summary>
+        /// <param name="range">The range.</param>
+        /// <exception cref="NotImplementedException"></exception>
         public void SetOptionAEMode(CameraFpsRange range)
         {
             throw new NotImplementedException();

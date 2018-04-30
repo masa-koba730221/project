@@ -25,9 +25,10 @@
     <MandroidI18n />
     <JavaMaximumHeapSize />
     <JavaOptions />
-    <NuGetPackageImportStamp></NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
-<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -57,6 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Prism.DryIoc.Forms" Version="7.0.0.396" />
+    <PackageReference Include="StyleCop.Analyzers">
+      <Version>1.0.2</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Design">
       <Version>27.0.2</Version>
     </PackageReference>
@@ -86,15 +90,19 @@
     <Compile Include="MainApplication.cs" />
   </ItemGroup>
   <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\mipmap-hdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-mdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-xhdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-xxhdpi\ic_launcher.png" />
-    <AndroidResource Include="Resources\mipmap-xxxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\ic_launcher.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\qr14.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -107,10 +115,6 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Kobama.Xam.PrimsApp\Kobama.Xam.PrimsApp.csproj">
-      <Project>{22E674AA-3720-4842-87C1-65B4D9469A0A}</Project>
-      <Name>Kobama.Xam.PrismApp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Plugin\CameraPreview\Kobama.Xam.Plugin.CameraPreview.Droid\Kobama.Xam.Plugin.CameraPreview.Droid.csproj">
       <Project>{B5BC3953-B357-4D97-97F8-FA46B1016B96}</Project>
       <Name>Kobama.Xam.Plugin.CameraPreview.Droid</Name>
@@ -138,6 +142,10 @@
     <ProjectReference Include="..\..\Plugin\QRCode\Kobama.Xam.Plugin.QRCode\Kobama.Xam.Plugin.QRCode.csproj">
       <Project>{03AE9E0E-BDCF-4A8A-9E7F-F371AD7F6918}</Project>
       <Name>Kobama.Xam.Plugin.QRCode</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Kobama.Xam.PrismApp\Kobama.Xam.PrismApp.csproj">
+      <Project>{22E674AA-3720-4842-87C1-65B4D9469A0A}</Project>
+      <Name>Kobama.Xam.PrismApp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

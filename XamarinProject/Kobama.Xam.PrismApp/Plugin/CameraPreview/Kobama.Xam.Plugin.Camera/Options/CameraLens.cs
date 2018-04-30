@@ -1,9 +1,8 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="CameraLens.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="CameraLens.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
-using System;
 
 namespace Kobama.Xam.Plugin.Camera.Options
 {
@@ -23,9 +22,19 @@ namespace Kobama.Xam.Plugin.Camera.Options
         Rear,
     }
 
+    /// <summary>
+    /// Image Available Mode
+    /// </summary>
     public enum ImageAvailableMode
     {
+        /// <summary>
+        /// The automatic
+        /// </summary>
         Auto,
+
+        /// <summary>
+        /// The each frame
+        /// </summary>
         EachFrame
     }
 }

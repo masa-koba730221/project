@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="Logger.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="Logger.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 namespace Kobama.Xam.Plugin.Log
 {
@@ -19,7 +19,7 @@ namespace Kobama.Xam.Plugin.Log
         private string className = string.Empty;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Kobama.Xam.Plugin.Log.Logger"/> class.
+        /// Initializes a new instance of the <see cref="Logger"/> class.
         /// </summary>
         /// <param name="className">Class name.</param>
         public Logger(string className)
@@ -32,7 +32,7 @@ namespace Kobama.Xam.Plugin.Log
         /// </summary>
         /// <param name="message">Message.</param>
         /// <param name="method">Method.</param>
-        public void CallMethod(string message = "", [CallerMemberName] string method = "")
+        public void CalledMethod(string message = "", [CallerMemberName] string method = "")
         {
             System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff ")} [Proc][Class]{this.className} [{method}()] {message}");
         }
@@ -42,7 +42,7 @@ namespace Kobama.Xam.Plugin.Log
         /// </summary>
         /// <param name="message">Message.</param>
         /// <param name="method">Method.</param>
-        public void Err(string message = "", [CallerMemberName] string method = "")
+        public void Error(string message = "", [CallerMemberName] string method = "")
         {
             System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff ")} [Err ][Class]{this.className} [{method}()] {message}");
         }

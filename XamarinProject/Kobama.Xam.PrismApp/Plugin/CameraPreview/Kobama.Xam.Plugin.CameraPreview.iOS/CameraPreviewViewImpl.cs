@@ -1,77 +1,69 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="CameraPreviewView.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="CameraPreviewViewImpl.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
-using System;
-using System.Linq;
-using AVFoundation;
-using CoreFoundation;
-using CoreGraphics;
-using CoreMedia;
-using CoreVideo;
-using Foundation;
-using Kobama.Xam.Plugin.Camera.iOS;
-using Kobama.Xam.Plugin.Log;
-using UIKit;
-
+#pragma warning disable SA1300
 namespace Kobama.Xam.Plugin.CameraPreview.iOS
 {
+    using System;
+    using AVFoundation;
+    using CoreGraphics;
+    using Foundation;
+    using Kobama.Xam.Plugin.Log;
+    using UIKit;
+
+    /// <summary>
+    /// Camera Preview View Impl
+    /// </summary>
+    /// <seealso cref="UIKit.UIView" />
     public class CameraPreviewViewImpl : UIView
     {
         private static readonly Logger Log = new Logger(nameof(CameraPreviewViewImpl));
-        AVCaptureVideoPreviewLayer previewLayer;
-
-        public event EventHandler<EventArgs> Tapped;
-
-        private UIPinchGestureRecognizer Pinch;
-
-        private CameraPreviewView mCameraPreview;
-
+        private AVCaptureVideoPreviewLayer previewLayer;
+        private UIPinchGestureRecognizer pinch;
         private Camera.iOS.Camera mCamera;
-        public Kobama.Xam.Plugin.Camera.iOS.Camera CameraControl { get { return this.mCamera; } }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CameraPreviewViewImpl"/> class.
+        /// </summary>
+        /// <param name="camera">The camera.</param>
         public CameraPreviewViewImpl(CameraPreviewView camera)
         {
-            Log.CallMethod();
+            Log.CalledMethod();
             this.mCamera = Camera.iOS.Camera.Instance;
             this.mCamera.CameraView = this;
             this.mCamera.OpenCamera();
             this.previewLayer = this.mCamera.PreviewLayer;
-            Layer.AddSublayer(this.previewLayer);
+            this.Layer.AddSublayer(this.previewLayer);
 
             this.SetPinchGesture();
         }
 
-        public override void Draw(CGRect rect)
+        /// <summary>
+        /// Occurs when [tapped].
+        /// </summary>
+        public event EventHandler<EventArgs> Tapped;
+
+        /// <summary>
+        /// Gets the camera control.
+        /// </summary>
+        /// <value>
+        /// The camera control.
+        /// </value>
+        public Kobama.Xam.Plugin.Camera.iOS.Camera CameraControl
         {
-            AuthorizeCameraUse();
-            Log.CallMethod($"Rect Width:{rect.Width} Height:{rect.Height}");
-            base.Draw(rect);
-            this.previewLayer.Frame = rect;
+            get { return this.mCamera; }
         }
 
-        public override void TouchesBegan(NSSet touches, UIEvent evt)
-        {
-            Log.CallMethod();
-            base.TouchesBegan(touches, evt);
-            OnTapped();
-        }
-
-        protected virtual void OnTapped()
-        {
-            Log.CallMethod();
-            var eventHandler = Tapped;
-            if (eventHandler != null)
-            {
-                eventHandler(this, new EventArgs());
-            }
-        }
-
+        /// <summary>
+        /// Sets the pinch gesture.
+        /// </summary>
         public void SetPinchGesture()
         {
             nfloat lastscale = 1.0f;
-            Pinch = new UIPinchGestureRecognizer((e) => {
+            this.pinch = new UIPinchGestureRecognizer((e) =>
+            {
                 if (e.State == UIGestureRecognizerState.Changed)
                 {
                     lastscale = this.mCamera.GesturePinch(e.Scale, lastscale);
@@ -81,18 +73,50 @@ namespace Kobama.Xam.Plugin.CameraPreview.iOS
                     lastscale = 1.0f;
                 }
             });
-            this.AddGestureRecognizer(Pinch);
+            this.AddGestureRecognizer(this.pinch);
         }
 
-		protected override void Dispose(bool disposing)
-		{
-            if (disposing){
-                this.RemoveGestureRecognizer(Pinch);
+        /// <inheritdoc/>
+        public override void Draw(CGRect rect)
+        {
+            this.AuthorizeCameraUse();
+            Log.CalledMethod($"Rect Width:{rect.Width} Height:{rect.Height}");
+            base.Draw(rect);
+            this.previewLayer.Frame = rect;
+        }
+
+        /// <inheritdoc/>
+        public override void TouchesBegan(NSSet touches, UIEvent evt)
+        {
+            Log.CalledMethod();
+            base.TouchesBegan(touches, evt);
+            this.OnTapped();
+        }
+
+        /// <summary>
+        /// Called when [tapped].
+        /// </summary>
+        protected virtual void OnTapped()
+        {
+            Log.CalledMethod();
+            this.Tapped?.Invoke(this, new EventArgs());
+        }
+
+        /// <inheritdoc/>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.RemoveGestureRecognizer(this.pinch);
                 this.mCamera.Dispose();
             }
-            base.Dispose(disposing);
-		}
 
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Authorizes the camera use.
+        /// </summary>
         protected void AuthorizeCameraUse()
         {
             var authorizationStatus = AVCaptureDevice.GetAuthorizationStatus(AVMediaType.Video);
@@ -101,5 +125,5 @@ namespace Kobama.Xam.Plugin.CameraPreview.iOS
                 AVCaptureDevice.RequestAccessForMediaType(AVMediaType.Video, (accessGranted) => System.Diagnostics.Debug.WriteLine(accessGranted));
             }
         }
-	}
+    }
 }

@@ -1,15 +1,11 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="CameraPreviewRenderer.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="CameraPreviewRenderer.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using Android.Content;
-using Android.Hardware;
-using Android.Views;
 using Kobama.Xam.Plugin.CameraPreview;
 using Kobama.Xam.Plugin.CameraPreview.Droid;
 using Kobama.Xam.Plugin.Log;
@@ -37,7 +33,7 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="T:Kobama.Xam.Plugin.CameraPreview.Droid.CameraPreviewRenderer"/> class.
+        /// <see cref="CameraPreviewRenderer"/> class.
         /// </summary>
         /// <param name="context">Context.</param>
         public CameraPreviewRenderer(Context context)
@@ -55,19 +51,19 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
 
             if (this.Control == null)
             {
-                this.cameraPreview = new CameraPreviewViewImpl(Context);
+                this.cameraPreview = new CameraPreviewViewImpl(this.Context);
                 this.SetNativeControl(this.cameraPreview);
             }
 
             if (e.OldElement != null)
             {
                 // Unsubscribe
-                this.Element.PropertyChanged -= OnElementPropertyChanged;
+                this.Element.PropertyChanged -= this.OnElementPropertyChanged;
             }
 
             if (e.NewElement != null)
             {
-                this.Element.PropertyChanged += OnElementPropertyChanged;
+                this.Element.PropertyChanged += this.OnElementPropertyChanged;
             }
         }
 
@@ -79,23 +75,7 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
-            mLogger.CallMethod();
-        }
-
-        /// <summary>
-        /// Ons the resume.
-        /// </summary>
-        private void OnResume()
-        {
-            mLogger.CallMethod();
-        }
-
-        /// <summary>
-        /// Ons the pause.
-        /// </summary>
-        private void OnPause()
-        {
-            mLogger.CallMethod();
+            mLogger.CalledMethod();
         }
 
         /// <summary>
@@ -109,6 +89,22 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
             }
 
             base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Ons the resume.
+        /// </summary>
+        private void OnResume()
+        {
+            mLogger.CalledMethod();
+        }
+
+        /// <summary>
+        /// Ons the pause.
+        /// </summary>
+        private void OnPause()
+        {
+            mLogger.CalledMethod();
         }
    }
 }

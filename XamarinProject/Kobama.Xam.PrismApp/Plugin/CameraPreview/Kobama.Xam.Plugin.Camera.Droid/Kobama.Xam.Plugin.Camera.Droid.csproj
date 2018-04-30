@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
+    <DocumentationFile>bin\Debug\Kobama.Xam.Plugin.Camera.Droid.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +42,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
     <Reference Include="zxing.monoandroid">
-      <HintPath>..\..\..\packages\ZXing.Net.0.16.2\lib\MonoAndroid\zxing.monoandroid.dll</HintPath>
+      <HintPath>..\..\..\packages\ZXing.Net.0.16.4\lib\MonoAndroid\zxing.monoandroid.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -59,15 +60,16 @@
     <Compile Include="CameraState.cs" />
   </ItemGroup>
   <ItemGroup>
+    <AdditionalFiles Include="..\..\..\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
     <None Include="Resources\AboutResources.txt" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Listener\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\Logger\Kobama.Xam.Plugin.Log\Kobama.Xam.Plugin.Log.csproj">
       <Project>{F0C94312-EDE3-4C58-8EC2-45CA35C27EB9}</Project>
@@ -77,6 +79,10 @@
       <Project>{6CCB1AB9-714D-4524-A865-2DD30952F3BA}</Project>
       <Name>Kobama.Xam.Plugin.Camera</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

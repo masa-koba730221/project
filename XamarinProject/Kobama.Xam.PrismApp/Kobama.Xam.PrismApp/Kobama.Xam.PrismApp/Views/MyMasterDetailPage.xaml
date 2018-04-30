@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Kobama.Xam.PrismApp.Views.MyMasterDetailPage"
+             IsPresented="{Binding IsPresented, Mode=TwoWay}"
+             Title="Menu"
+             MasterBehavior="Popover">
+    <MasterDetailPage.Master>
+        <ContentPage Padding="0, 25" Title="Menu" Icon="hamburger.png">
+          <StackLayout VerticalOptions="FillAndExpand">
+            <Label Text="Menu" 
+                   FontSize="18"
+                   Margin="10,36,0,5"/>
+            <ListView ItemsSource="{Binding Menus}"
+                      VerticalOptions="FillAndExpand"
+                      SelectedItem="{Binding SelectedItem}">
+              <ListView.ItemTemplate>
+                <DataTemplate>
+                  <ImageCell Text="{Binding Title}" ImageSource="{Binding Icon}"/>
+                </DataTemplate>
+              </ListView.ItemTemplate>
+            </ListView>
+          </StackLayout>
+        </ContentPage>
+    </MasterDetailPage.Master>
+</MasterDetailPage>

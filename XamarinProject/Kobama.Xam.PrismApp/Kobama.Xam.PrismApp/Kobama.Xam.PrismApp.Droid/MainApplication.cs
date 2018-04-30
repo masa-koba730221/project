@@ -1,10 +1,8 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="MainApplication.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="MainApplication.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
-
-using Plugin.CurrentActivity;
 
 namespace Kobama.Xam.PrismApp.Droid
 {
@@ -12,6 +10,7 @@ namespace Kobama.Xam.PrismApp.Droid
     using Android.App;
     using Android.OS;
     using Android.Runtime;
+    using global::Plugin.CurrentActivity;
 
     /// <summary>
     /// Main application.
@@ -20,11 +19,11 @@ namespace Kobama.Xam.PrismApp.Droid
     [Application(Debuggable = true)]
 #else
     [Application(Debuggable = false)]
-#endif    
+#endif
     public partial class MainApplication : Application, Application.IActivityLifecycleCallbacks
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Kobama.Xam.PrismApp.Droid.MainApplication"/> class.
+        /// Initializes a new instance of the <see cref="MainApplication"/> class.
         /// </summary>
         /// <param name="handle">Handle.</param>
         /// <param name="transer">Transer.</param>
@@ -101,7 +100,7 @@ namespace Kobama.Xam.PrismApp.Droid
         /// <param name="activity">Activity.</param>
         public void OnActivityStarted(Activity activity)
         {
-            CrossCurrentActivity.Current.Activity = activity;        
+            CrossCurrentActivity.Current.Activity = activity;
         }
 
         /// <summary>

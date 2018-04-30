@@ -1,22 +1,27 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="CameraFpsRange.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="CameraFpsRange.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
-using System;
 namespace Kobama.Xam.Plugin.Camera
 {
+    /// <summary>
+    /// Camera Fps Range
+    /// </summary>
     public class CameraFpsRange
     {
         private int lower;
         private int upper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CameraFpsRange"/> class.
+        /// </summary>
         public CameraFpsRange()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Kobama.Xam.Plugin.Camera.CameraFpsRange"/> class.
+        /// Initializes a new instance of the <see cref="CameraFpsRange"/> class.
         /// </summary>
         /// <param name="lower">Lower.</param>
         /// <param name="upper">Upper.</param>

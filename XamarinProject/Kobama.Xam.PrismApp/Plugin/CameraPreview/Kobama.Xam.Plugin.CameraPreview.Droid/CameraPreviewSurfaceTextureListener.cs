@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="CameraPreviewSurfaceTextureListener.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="CameraPreviewSurfaceTextureListener.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 namespace Kobama.Xam.Plugin.CameraPreview.Droid
 {
@@ -17,7 +17,7 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
         /// <summary>
         /// The owner.
         /// </summary>
-        private readonly Camera2 owner;
+        private readonly Camera2 camera;
 
         /// <summary>
         /// The logger.
@@ -26,17 +26,12 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="T:Kobama.Xam.Plugin.CameraPreview.Droid.CameraPreviewSurfaceTextureListener"/> class.
+        /// <see cref="CameraPreviewSurfaceTextureListener"/> class.
         /// </summary>
-        /// <param name="owner">Owner.</param>
-        public CameraPreviewSurfaceTextureListener(Camera2 owner)
+        /// <param name="camera">Owner.</param>
+        public CameraPreviewSurfaceTextureListener(Camera2 camera)
         {
-            if (owner == null)
-            {
-                throw new System.ArgumentNullException("owner");
-            }
-
-            this.owner = owner;
+            this.camera = camera ?? throw new System.ArgumentNullException("owner");
         }
 
         /// <summary>
@@ -47,9 +42,9 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
         /// <param name="height">Height.</param>
         public void OnSurfaceTextureAvailable(Android.Graphics.SurfaceTexture surface, int width, int height)
         {
-            this.logger.CallMethod($"width:{width} height:{height}");
-            owner.StartBackgroundThread();
-            owner.OpenCamera(width, height);
+            this.logger.CalledMethod($"width:{width} height:{height}");
+            this.camera.StartBackgroundThread();
+            this.camera.OpenCamera(width, height);
         }
 
         /// <summary>
@@ -59,7 +54,8 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
         /// <param name="surface">Surface.</param>
         public bool OnSurfaceTextureDestroyed(Android.Graphics.SurfaceTexture surface)
         {
-            this.logger.CallMethod();
+            this.logger.CalledMethod();
+            this.camera.OnDestroy();
             return true;
         }
 
@@ -71,8 +67,8 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
         /// <param name="height">Height.</param>
         public void OnSurfaceTextureSizeChanged(Android.Graphics.SurfaceTexture surface, int width, int height)
         {
-            this.logger.CallMethod($"width:{width}, height:{height}");
-            owner.ConfigureTransform(width, height);
+            this.logger.CalledMethod($"width:{width}, height:{height}");
+            this.camera.ConfigureTransform(width, height);
         }
 
         /// <summary>

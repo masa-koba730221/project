@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="ImageAvailableListener.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="ImageAvailableListener.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 namespace Kobama.Xam.Plugin.Camera.Droid.Listener
@@ -23,15 +23,24 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         private readonly Logger logger = new Logger(nameof(ImageAvailableListener));
 
         /// <summary>
+        /// The file.
+        /// </summary>
+        private readonly File file;
+
+        /// <summary>
+        /// The owner.
+        /// </summary>
+        private readonly Camera2 owner;
+
+        /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="T:Kobama.Xam.Plugin.Camera.Droid.Listener.ImageAvailableListener"/> class.
+        /// <see cref="ImageAvailableListener"/> class.
         /// </summary>
         /// <param name="fragment">Fragment.</param>
         /// <param name="file">File.</param>
         public ImageAvailableListener(Camera2 fragment, File file)
         {
- //           this.logger.CallMethod($"file:{file.ToString()}");
-
+            // this.logger.CallMethod($"file:{file.ToString()}");
             if (fragment == null)
             {
                 throw new System.ArgumentNullException("fragment");
@@ -42,19 +51,9 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                 throw new System.ArgumentNullException("file");
             }
 
-            owner = fragment;
+            this.owner = fragment;
             this.file = file;
         }
-
-        /// <summary>
-        /// The file.
-        /// </summary>
-        private readonly File file;
-
-        /// <summary>
-        /// The owner.
-        /// </summary>
-        private readonly Camera2 owner;
 
         // public File File { get; private set; }
         // public Camera2BasicFragment Owner { get; private set; }
@@ -66,13 +65,13 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         public void OnImageAvailable(ImageReader reader)
         {
             // this.logger.CallMethod()
-            owner.mBackgroundHandler.Post(new ImageSaver(owner, reader.AcquireNextImage(), file));
+            this.owner.mBackgroundHandler.Post(new ImageSaver(this.owner, reader.AcquireNextImage(), this.file));
 
-            //var image = reader.AcquireNextImage();
-            //ByteBuffer buffer = image.GetPlanes()[0].Buffer;
-            //byte[] bytes = new byte[buffer.Remaining()];
-            //buffer.Get(bytes);
-            //image.Close();
+            // var image = reader.AcquireNextImage();
+            // ByteBuffer buffer = image.GetPlanes()[0].Buffer;
+            // byte[] bytes = new byte[buffer.Remaining()];
+            // buffer.Get(bytes);
+            // image.Close();
         }
 
         /// <summary>
@@ -80,6 +79,8 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// </summary>
         private class ImageSaver : Java.Lang.Object, IRunnable
         {
+            private static bool isDecoding = false;
+
             /// <summary>
             /// The logger.
             /// </summary>
@@ -95,46 +96,35 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
             /// </summary>
             private File mFile;
 
-            private static bool IsDecoding = false;
-
             private Camera2 mOwner;
 
             /// <summary>
             /// Initializes a new instance of the
-            /// <see cref="T:Kobama.Xam.Plugin.Camera.Droid.Listener.ImageAvailableListener.ImageSaver"/> class.
+            /// <see cref="ImageSaver"/> class.
             /// </summary>
+            /// <param name="fragment">Frqgment</param>
             /// <param name="image">Image.</param>
             /// <param name="file">File.</param>
             public ImageSaver(Camera2 fragment, Image image, File file)
             {
-                
-//                this.logger.CallMethod();
+                // this.logger.CallMethod();
                 if (image == null)
                 {
                     throw new System.ArgumentNullException("image");
                 }
 
-                if (file == null)
-                {
-                    throw new System.ArgumentNullException("file");
-                }
+                this.mFile = file ?? throw new System.ArgumentNullException("file");
+                this.mOwner = fragment ?? throw new System.ArgumentNullException("camera2");
 
-                if (fragment == null){
-                    throw new System.ArgumentNullException("camera2");
-                }
-
-                if (IsDecoding)
+                if (isDecoding)
                 {
                     image.Close();
                     return;
                 }
 
-                IsDecoding = true;
+                isDecoding = true;
 
-                mImage = image;
-                mFile = file;
-                mOwner = fragment;
-
+                this.mImage = image;
             }
 
             /// <summary>
@@ -142,36 +132,34 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
             /// </summary>
             public void Run()
             {
-//                this.logger.CallMethod();
-
-                if (mImage==null){
+                // this.logger.CallMethod();
+                if (this.mImage == null)
+                {
                     return;
                 }
 
-                ByteBuffer buffer = mImage.GetPlanes()[0].Buffer;
+                ByteBuffer buffer = this.mImage.GetPlanes()[0].Buffer;
                 byte[] bytes = new byte[buffer.Remaining()];
                 buffer.Get(bytes);
 
-                //                var source = new ZXing.PlanarYUVLuminanceSource(bytes, this.mImage.Width, this.mImage.Height, 0, 0, this.mImage.Width, this.mImage.Height, false);
-
+                // var source = new ZXing.PlanarYUVLuminanceSource(bytes, this.mImage.Width, this.mImage.Height, 0, 0, this.mImage.Width, this.mImage.Height, false);
                 this.mOwner.NotifySavedIamage(bytes, new System.Drawing.Size(this.mImage.Width, this.mImage.Height));
 
-                mImage.Close();
-                //var reader = new ZXing.BarcodeReader();
+                this.mImage.Close();
 
-                //var result = reader.Decode(source);
-                //if (result != null){
+                // var reader = new ZXing.BarcodeReader();
+                // var result = reader.Decode(source);
+                // if (result != null){
                 //    this.mOwner.NotifyQRCode(true, result.Text);
-                //}
-                //else
-                //{
-                //    this.mOwner.NotifyQRCode(false, string.Empty);    
-                //}
+                // }
+                // else
+                // {
+                //    this.mOwner.NotifyQRCode(false, string.Empty);
+                // }
+                isDecoding = false;
 
-                IsDecoding = false;
-
-                //using (var output = new FileOutputStream(mFile))
-                //{
+                // using (var output = new FileOutputStream(mFile))
+                // {
                 //    try
                 //    {
                 //        output.Write(bytes);
@@ -184,7 +172,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                 //    {
                 //        mImage.Close();
                 //    }
-                //}
+                // }
             }
         }
     }

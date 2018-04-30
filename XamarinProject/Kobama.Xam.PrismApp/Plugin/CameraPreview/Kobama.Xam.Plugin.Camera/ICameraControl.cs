@@ -1,18 +1,19 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="ICameraControl.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="ICameraControl.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using Kobama.Xam.Plugin.Camera.Options;
-
 namespace Kobama.Xam.Plugin.Camera
 {
+    using System.Collections.Generic;
+    using System.Drawing;
+    using Kobama.Xam.Plugin.Camera.Options;
+
     /// <summary>
-    /// delegate Saved Image
+    /// Saved Image
     /// </summary>
+    /// <param name="image">The image.</param>
+    /// <param name="size">The size.</param>
     public delegate void SavedImage(byte[] image, Size size);
 
     /// <summary>
@@ -35,7 +36,12 @@ namespace Kobama.Xam.Plugin.Camera
         /// </summary>
         event Opened CallabckOpened;
 
-
+        /// <summary>
+        /// Gets or sets the image mode.
+        /// </summary>
+        /// <value>
+        /// The image mode.
+        /// </value>
         ImageAvailableMode ImageMode { get; set; }
 
         /// <summary>
@@ -76,6 +82,10 @@ namespace Kobama.Xam.Plugin.Camera
         /// <returns>The fps range list.</returns>
         List<CameraFpsRange> GetFpsRangeList();
 
+        /// <summary>
+        /// Sets the option AE mode.
+        /// </summary>
+        /// <param name="range">The range.</param>
         void SetOptionAEMode(CameraFpsRange range);
     }
 }
