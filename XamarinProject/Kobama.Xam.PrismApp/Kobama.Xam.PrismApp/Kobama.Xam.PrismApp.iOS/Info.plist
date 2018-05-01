@@ -20,12 +20,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>MinimumOSVersion</key>
-	<string>11.3</string>
 	<key>CFBundleDisplayName</key>
 	<string>Kobama.Xam.PrismApp.iOS</string>
 	<key>CFBundleIdentifier</key>
-	<string>jp.kobama.xam.prismapp</string>
+	<string>jp.kobama.Xam.PrismApp</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFBundleName</key>
@@ -35,6 +33,10 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Camera is used</string>
 	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>MinimumOSVersion</key>
+	<string>11.3</string>
+	<key>UIMainStoryboardFile</key>
 	<string>LaunchScreen</string>
 </dict>
 </plist>

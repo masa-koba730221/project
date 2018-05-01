@@ -93,6 +93,14 @@ namespace Kobama.Xam.Plugin.CameraPreview.iOS
             this.OnTapped();
         }
 
+        /// <inheritdoc/>
+        public override void LayoutSubviews()
+        {
+            Log.CalledMethod();
+            base.LayoutSubviews();
+            this.mCamera.UpdateOrientation();
+        }
+
         /// <summary>
         /// Called when [tapped].
         /// </summary>
@@ -125,5 +133,5 @@ namespace Kobama.Xam.Plugin.CameraPreview.iOS
                 AVCaptureDevice.RequestAccessForMediaType(AVMediaType.Video, (accessGranted) => System.Diagnostics.Debug.WriteLine(accessGranted));
             }
         }
-    }
+	}
 }

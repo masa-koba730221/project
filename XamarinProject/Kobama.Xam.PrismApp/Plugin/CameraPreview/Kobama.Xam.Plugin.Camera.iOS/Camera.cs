@@ -414,5 +414,42 @@ namespace Kobama.Xam.Plugin.Camera.iOS
             this.MainDevice.UnlockForConfiguration();
             return scale;
         }
+
+        /// <summary>
+        /// Updates the orientation.
+        /// </summary>
+        public void UpdateOrientation()
+        {
+            var connection = this.mPreviewLayer.Connection;
+            var device = UIDevice.CurrentDevice;
+
+            if(connection != null && device !=null )
+            {
+                var orientation = device.Orientation;
+
+                if(connection.SupportsVideoOrientation)
+                {
+                    switch(orientation) {
+                        case UIDeviceOrientation.Portrait:
+                            connection.VideoOrientation = AVCaptureVideoOrientation.Portrait;
+                            break;
+                        case UIDeviceOrientation.LandscapeRight:
+                            connection.VideoOrientation = AVCaptureVideoOrientation.LandscapeLeft;
+                            break;
+                        case UIDeviceOrientation.LandscapeLeft:
+                            connection.VideoOrientation = AVCaptureVideoOrientation.LandscapeRight;
+                            break;
+                        case UIDeviceOrientation.PortraitUpsideDown:
+                            connection.VideoOrientation = AVCaptureVideoOrientation.PortraitUpsideDown;
+                            break;
+                        default:
+                            connection.VideoOrientation = AVCaptureVideoOrientation.Portrait;
+                            break;
+                    }
+
+                    this.mPreviewLayer.Frame = this.CameraView.Bounds;
+                }
+            }
+        }
     }
 }
