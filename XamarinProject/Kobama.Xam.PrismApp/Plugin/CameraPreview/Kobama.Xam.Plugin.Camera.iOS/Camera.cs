@@ -11,6 +11,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
     using System.Drawing;
     using AVFoundation;
     using CoreFoundation;
+    using CoreGraphics;
     using CoreMedia;
     using CoreVideo;
     using Foundation;
@@ -91,6 +92,14 @@ namespace Kobama.Xam.Plugin.Camera.iOS
         /// The output.
         /// </value>
         public AVCaptureVideoDataOutput Output { get; private set; }
+
+        /// <summary>
+        /// Gets the still output.
+        /// </summary>
+        /// <value>
+        /// The still output.
+        /// </value>
+        public AVCaptureStillImageOutput StillOutput { get; private set; }
 
         /// <summary>
         /// Gets or sets the recorder.
@@ -241,6 +250,38 @@ namespace Kobama.Xam.Plugin.Camera.iOS
         /// </summary>
         public void TakePicture()
         {
+            var connection = this.StillOutput.ConnectionFromMediaType(AVMediaType.Video);
+
+            if (connection == null)
+            {
+                Log.Error("Connection is null");
+                return;
+            }
+
+            this.StillOutput.CaptureStillImageAsynchronously(connection, (sampleBuffer, err) =>
+            {
+                // In case of save to photo to Album in directly
+                // var imageData = AVCaptureStillImageOutput.JpegStillToNSData(sampleBuffer);
+                // var uiImage = new UIImage(imageData);
+                // uiImage.SaveToPhotosAlbum((image, er) =>
+                // {
+                //    if (er != null)
+                //    {
+                //        Log.Error("Error : Failed to save photo to Photo Album.");
+                //    }
+                // });
+
+                // In case of save Photo to Album via GallaryImpl
+                var imageData = AVCaptureStillImageOutput.JpegStillToNSData(sampleBuffer);
+                var uiImage = new UIImage(imageData);
+
+                byte[] bytes = null;
+                using (var data = uiImage.AsJPEG())
+                {
+                    bytes = data.ToArray();
+                    this.NotifySavedIamage(bytes, new Size((int)uiImage.Size.Width, (int)uiImage.Size.Height));
+                }
+            });
         }
 
         /// <summary>
@@ -330,8 +371,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
                 return;
             }
 
-            NSError device_error;
-            this.MainDevice.LockForConfiguration(out device_error);
+            this.MainDevice.LockForConfiguration(out NSError device_error);
             if (device_error != null)
             {
                 Console.WriteLine($"Error: {device_error.LocalizedDescription}");
@@ -354,8 +394,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
                 this.CaptureSession.RemoveInput(this.Input);
             }
 
-            NSError error;
-            this.Input = new AVCaptureDeviceInput(this.MainDevice, out error);
+            this.Input = new AVCaptureDeviceInput(this.MainDevice, out NSError error);
             this.CaptureSession.AddInput(this.Input);
 
             // 出力設定
@@ -363,18 +402,35 @@ namespace Kobama.Xam.Plugin.Camera.iOS
             if (this.Output != null)
             {
                 this.CaptureSession.RemoveOutput(this.Output);
+                this.Output = null;
             }
 
-            this.Output = new AVCaptureVideoDataOutput();
-            this.Queue = new DispatchQueue("myQueue");
-            this.Output.AlwaysDiscardsLateVideoFrames = true;
-            this.Recorder = new OutputRecorder(this);
-            this.Output.SetSampleBufferDelegateQueue(this.Recorder, this.Queue);
-            var vSettings = new AVVideoSettingsUncompressed();
-            vSettings.PixelFormatType = CVPixelFormatType.CV32BGRA;
-            this.Output.WeakVideoSettings = vSettings.Dictionary;
+            if (this.StillOutput != null)
+            {
+                this.CaptureSession.RemoveOutput(this.StillOutput);
+                this.StillOutput = null;
+            }
 
-            this.CaptureSession.AddOutput(this.Output);
+            if (this.ImageMode == ImageAvailableMode.EachFrame)
+            {
+                this.Output = new AVCaptureVideoDataOutput();
+                this.Queue = new DispatchQueue("myQueue");
+                this.Output.AlwaysDiscardsLateVideoFrames = true;
+                this.Recorder = new OutputRecorder(this);
+                this.Output.SetSampleBufferDelegateQueue(this.Recorder, this.Queue);
+                var vSettings = new AVVideoSettingsUncompressed
+                {
+                    PixelFormatType = CVPixelFormatType.CV32BGRA
+                };
+                this.Output.WeakVideoSettings = vSettings.Dictionary;
+
+                this.CaptureSession.AddOutput(this.Output);
+            }
+            else
+            {
+                this.StillOutput = new AVCaptureStillImageOutput();
+                this.CaptureSession.AddOutput(this.StillOutput);
+            }
 
             this.CaptureSession.CommitConfiguration();
 
@@ -389,8 +445,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
         /// <returns>Scale</returns>
         public nfloat GesturePinch(nfloat scaleState, nfloat lastScale)
         {
-            NSError device_error;
-            this.MainDevice.LockForConfiguration(out device_error);
+            this.MainDevice.LockForConfiguration(out NSError device_error);
             if (device_error != null)
             {
                 Console.WriteLine($"Error: {device_error.LocalizedDescription}");
@@ -423,13 +478,14 @@ namespace Kobama.Xam.Plugin.Camera.iOS
             var connection = this.mPreviewLayer.Connection;
             var device = UIDevice.CurrentDevice;
 
-            if(connection != null && device !=null )
+            if (connection != null && device != null)
             {
                 var orientation = device.Orientation;
 
-                if(connection.SupportsVideoOrientation)
+                if (connection.SupportsVideoOrientation)
                 {
-                    switch(orientation) {
+                    switch (orientation)
+                    {
                         case UIDeviceOrientation.Portrait:
                             connection.VideoOrientation = AVCaptureVideoOrientation.Portrait;
                             break;

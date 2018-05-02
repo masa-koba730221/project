@@ -64,6 +64,8 @@ namespace Kobama.Xam.PrismApp
             containerRegistry.RegisterForNavigation<MainPage>();
             containerRegistry.RegisterForNavigation<QRCodeTestPage>();
             containerRegistry.RegisterForNavigation<QRCodeReaderPage>();
+            containerRegistry.RegisterForNavigation<CameraTestPage>();
+            containerRegistry.RegisterForNavigation<CameraPage>();
         }
     }
 }

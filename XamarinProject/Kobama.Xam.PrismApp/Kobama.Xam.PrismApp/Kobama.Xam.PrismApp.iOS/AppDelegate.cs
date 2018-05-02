@@ -8,14 +8,16 @@
 namespace Kobama_Xam_PrismApp.iOS
 {
     using Foundation;
+    using global::Prism;
+    using global::Prism.Ioc;
     using Kobama.Xam.Plugin.Camera;
     using Kobama.Xam.Plugin.Camera.iOS;
     using Kobama.Xam.Plugin.CameraPreview.iOS;
+    using Kobama.Xam.Plugin.Gallary;
+    using Kobama.Xam.Plugin.Gallary.iOS;
     using Kobama.Xam.Plugin.QRCode;
     using Kobama.Xam.Plugin.QRCode.Droid;
     using Kobama.Xam.PrismApp;
-    using Prism;
-    using Prism.Ioc;
     using UIKit;
 
     /// <summary>
@@ -50,10 +52,11 @@ namespace Kobama_Xam_PrismApp.iOS
             /// Registers the types.
             /// </summary>
             /// <param name="container">Container.</param>
-            public void RegisterTypes(IContainerRegistry container)
+            void IPlatformInitializer.RegisterTypes(IContainerRegistry container)
             {
                 container.RegisterInstance(typeof(ICameraControl), Camera.Instance);
                 container.Register(typeof(IQRCodeControl), typeof(QRCodeControlImpl));
+                container.Register(typeof(IGallaryService), typeof(GallaryImpl));
             }
         }
     }

@@ -51,7 +51,6 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
             // If something goes wrong with the save (or the handler isn't even
             // registered, this code will toast a success message regardless...)
             //            owner.ShowToast("Saved: " + owner.mFile);
-            this.logger.CalledMethod(this.owner.mFile.ToString());
             this.owner.UnlockFocus();
         }
     }

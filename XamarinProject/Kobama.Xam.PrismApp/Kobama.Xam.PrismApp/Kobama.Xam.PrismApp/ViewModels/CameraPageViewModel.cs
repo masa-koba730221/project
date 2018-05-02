@@ -1,23 +1,23 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="QRCodeReaderPageViewModel.cs" company="Kobama">
+﻿// <copyright file="CameraPageViewModel.cs" company="Kobama">
 // Copyright (c) Kobama. All rights reserved.
 // </copyright>
-// -----------------------------------------------------------------------
 
 namespace Kobama.Xam.PrismApp.ViewModels
 {
+    using System;
     using System.Drawing;
     using Kobama.Xam.Plugin.Camera;
     using Kobama.Xam.Plugin.Camera.Options;
-    using Kobama.Xam.Plugin.QRCode;
+    using Kobama.Xam.Plugin.Gallary;
     using Prism.Commands;
     using Prism.Navigation;
     using Prism.Services;
 
     /// <summary>
-    /// Main page view model.
+    /// Camera Page
     /// </summary>
-    public class QRCodeReaderPageViewModel : ViewModelBase
+    /// <seealso cref="Prism.Mvvm.BindableBase" />
+    public class CameraPageViewModel : ViewModelBase
     {
         /// <summary>
         /// The camera.
@@ -34,38 +34,29 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// </summary>
         private CameraLens lensMode = CameraLens.Rear;
 
-        /// <summary>
-        /// The QR Code service.
-        /// </summary>
-        private IQRCodeControl qRCodeService;
-
         private IDeviceService device;
 
-        private bool isDecoding;
+        private IGallaryService gallary;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="QRCodeReaderPageViewModel"/> class.
+        /// Initializes a new instance of the <see cref="CameraPageViewModel"/> class.
         /// </summary>
-        /// <param name="navigationService">Navigation service.</param>
-        /// <param name="camera">Camera.</param>
-        /// <param name="qrCode">QR Code</param>
-        /// <param name="device">Device Service</param>
-        public QRCodeReaderPageViewModel(
+        /// <param name="navigationService">The navigation service.</param>
+        /// <param name="camera">The camera.</param>
+        /// <param name="gallary">The Gallary Service </param>
+        /// <param name="device">The device.</param>
+        public CameraPageViewModel(
             INavigationService navigationService,
             ICameraControl camera,
-            IQRCodeControl qrCode,
+            IGallaryService gallary,
             IDeviceService device)
             : base(navigationService)
         {
-            this.device = device;
+            this.gallary = gallary;
 
-            this.Title = "QR Code Reader";
-            Result = string.Empty;
-            this.isDecoding = true;
             this.TitleLensButton = "Front";
-            this.qRCodeService = qrCode;
             this.camera = camera;
-            this.camera.ImageMode = ImageAvailableMode.EachFrame;
+            this.camera.ImageMode = ImageAvailableMode.Auto;
             this.camera.CallabckOpened += this.EventHandelerCameraOpened;
             this.camera.CallbackSavedImage += this.EventHandlerSavedImage;
             this.CommandChangeLens = new DelegateCommand(() =>
@@ -85,13 +76,12 @@ namespace Kobama.Xam.PrismApp.ViewModels
                     this.lensMode = CameraLens.Rear;
                 }
             });
-        }
 
-        /// <summary>
-        /// Gets or sets the result.
-        /// </summary>
-        /// <value>The result.</value>
-        public static string Result { get; set; }
+            this.CommandShot = new DelegateCommand(() =>
+            {
+                this.camera.TakePicture();
+            });
+        }
 
         /// <summary>
         /// Gets or sets the title lens button.
@@ -108,6 +98,12 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// </summary>
         /// <value>The command change lens.</value>
         public DelegateCommand CommandChangeLens { get; }
+
+        /// <summary>
+        /// Gets the command shot.
+        /// </summary>
+        /// <value>The command shot.</value>
+        public DelegateCommand CommandShot { get; }
 
         /// <summary>
         /// On the resume.
@@ -162,22 +158,15 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// <param name="size">Size</param>
         private void EventHandlerSavedImage(byte[] image, Size size)
         {
-            if (!this.isDecoding)
+            this.Logger.CalledMethod($"width:{size.Width} height:{size.Height}");
+
+            try
             {
-                return;
+                this.gallary.SaveImage(image, size, string.Empty, "photo");
             }
-
-            var result = this.qRCodeService.Decode(image, size);
-            if (result != null)
+            catch (Exception ex)
             {
-                this.isDecoding = false;
-
-                this.Logger.Debug($"QR Code : {result}");
-                Result = result;
-                this.device.BeginInvokeOnMainThread(async () =>
-                {
-                    await this.NavigationService.GoBackAsync();
-                });
+                this.Logger.Error(ex.Message);
             }
         }
     }

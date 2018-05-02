@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("Kobama.Xam.Plugin.CameraPreview.Droid.Resource", IsApplication=false)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("Kobama.Xam.Plugin.Gallary.Doid.Resource", IsApplication=false)]
 
-namespace Kobama.Xam.Plugin.CameraPreview.Droid
+namespace Kobama.Xam.Plugin.Gallary.Doid
 {
 	
 	

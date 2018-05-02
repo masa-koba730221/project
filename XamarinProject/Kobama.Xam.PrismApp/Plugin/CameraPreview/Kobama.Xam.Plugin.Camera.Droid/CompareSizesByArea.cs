@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="CompareSizesByArea.cs" company="mkoba">
-//      Copyright (c) mkoba. All rights reserved.
-//  </copyright>
+// <copyright file="CompareSizesByArea.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
+// </copyright>
 // -----------------------------------------------------------------------
 
 namespace Kobama.Xam.Plugin.CameraPreview.Droid
@@ -27,7 +27,7 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
             var rhsSize = (Size)rhs;
 
             // We cast here to ensure the multiplications won't overflow
-            return Long.Signum((long)lhsSize.Width * lhsSize.Height - (long)rhsSize.Width * rhsSize.Height);
+            return Long.Signum(((long)lhsSize.Width * lhsSize.Height) - ((long)rhsSize.Width * rhsSize.Height));
         }
     }
 }

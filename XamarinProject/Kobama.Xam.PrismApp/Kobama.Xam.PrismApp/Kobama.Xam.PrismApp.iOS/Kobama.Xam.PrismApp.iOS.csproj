@@ -253,12 +253,28 @@
       <Project>{22E674AA-3720-4842-87C1-65B4D9469A0A}</Project>
       <Name>Kobama.Xam.PrismApp</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Gallary\Kobama.Xam.Plugin.Gallary\Kobama.Xam.Plugin.Gallary.csproj">
+      <Project>{37366C4C-C8C1-432B-B039-E3ECC3E1460C}</Project>
+      <Name>Kobama.Xam.Plugin.Gallary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Gallary\Kobama.Xam.Plugin.Gallary.iOS\Kobama.Xam.Plugin.Gallary.iOS.csproj">
+      <Project>{C7959D1B-3399-4403-9030-5AED43E90C1D}</Project>
+      <Name>Kobama.Xam.Plugin.Gallary.iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\hamburger.png" />
     <BundleResource Include="Resources\hamburger%402x.png" />
     <BundleResource Include="Resources\qr14.png" />
-    <BundleResource Include="Resources\qr14%402.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\camera.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\camera%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\qr14%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

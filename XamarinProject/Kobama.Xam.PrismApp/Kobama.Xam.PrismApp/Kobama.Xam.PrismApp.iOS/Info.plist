@@ -38,5 +38,7 @@
 	<string>11.3</string>
 	<key>UIMainStoryboardFile</key>
 	<string>LaunchScreen</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Please allow the application to display the photo library.</string>
 </dict>
 </plist>

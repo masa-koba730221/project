@@ -1,9 +1,8 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="CameraState.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
+// <copyright file="CameraState.cs" company="Kobama">
+// Copyright (c) Kobama. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
-using System;
 
 namespace Kobama.Xam.Plugin.Camera.Droid
 {

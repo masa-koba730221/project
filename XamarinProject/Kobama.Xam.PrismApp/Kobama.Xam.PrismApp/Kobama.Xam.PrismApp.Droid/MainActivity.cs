@@ -51,6 +51,7 @@ namespace Kobama.Xam.PrismApp.Droid
             {
                 container.RegisterInstance<ICameraControl>(Camera2.Instance);
                 container.Register(typeof(IQRCodeControl), typeof(QRCodeControlImpl));
+                container.Register(typeof(Plugin.Gallary.IGallaryService), typeof(Plugin.Gallary.Doid.GallaryImpl));
             }
         }
     }

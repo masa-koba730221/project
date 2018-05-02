@@ -23,11 +23,6 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         private readonly Logger logger = new Logger(nameof(ImageAvailableListener));
 
         /// <summary>
-        /// The file.
-        /// </summary>
-        private readonly File file;
-
-        /// <summary>
         /// The owner.
         /// </summary>
         private readonly Camera2 owner;
@@ -37,22 +32,9 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <see cref="ImageAvailableListener"/> class.
         /// </summary>
         /// <param name="fragment">Fragment.</param>
-        /// <param name="file">File.</param>
-        public ImageAvailableListener(Camera2 fragment, File file)
+        public ImageAvailableListener(Camera2 fragment)
         {
-            // this.logger.CallMethod($"file:{file.ToString()}");
-            if (fragment == null)
-            {
-                throw new System.ArgumentNullException("fragment");
-            }
-
-            if (file == null)
-            {
-                throw new System.ArgumentNullException("file");
-            }
-
-            this.owner = fragment;
-            this.file = file;
+            this.owner = fragment ?? throw new System.ArgumentNullException("fragment");
         }
 
         // public File File { get; private set; }
@@ -65,13 +47,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         public void OnImageAvailable(ImageReader reader)
         {
             // this.logger.CallMethod()
-            this.owner.mBackgroundHandler.Post(new ImageSaver(this.owner, reader.AcquireNextImage(), this.file));
-
-            // var image = reader.AcquireNextImage();
-            // ByteBuffer buffer = image.GetPlanes()[0].Buffer;
-            // byte[] bytes = new byte[buffer.Remaining()];
-            // buffer.Get(bytes);
-            // image.Close();
+            this.owner.mBackgroundHandler.Post(new ImageSaver(this.owner, reader.AcquireNextImage()));
         }
 
         /// <summary>
@@ -91,11 +67,6 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
             /// </summary>
             private Image mImage;
 
-            /// <summary>
-            /// The file we save the image into.
-            /// </summary>
-            private File mFile;
-
             private Camera2 mOwner;
 
             /// <summary>
@@ -104,8 +75,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
             /// </summary>
             /// <param name="fragment">Frqgment</param>
             /// <param name="image">Image.</param>
-            /// <param name="file">File.</param>
-            public ImageSaver(Camera2 fragment, Image image, File file)
+            public ImageSaver(Camera2 fragment, Image image)
             {
                 // this.logger.CallMethod();
                 if (image == null)
@@ -113,7 +83,6 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                     throw new System.ArgumentNullException("image");
                 }
 
-                this.mFile = file ?? throw new System.ArgumentNullException("file");
                 this.mOwner = fragment ?? throw new System.ArgumentNullException("camera2");
 
                 if (isDecoding)
@@ -142,20 +111,10 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                 byte[] bytes = new byte[buffer.Remaining()];
                 buffer.Get(bytes);
 
-                // var source = new ZXing.PlanarYUVLuminanceSource(bytes, this.mImage.Width, this.mImage.Height, 0, 0, this.mImage.Width, this.mImage.Height, false);
                 this.mOwner.NotifySavedIamage(bytes, new System.Drawing.Size(this.mImage.Width, this.mImage.Height));
 
                 this.mImage.Close();
 
-                // var reader = new ZXing.BarcodeReader();
-                // var result = reader.Decode(source);
-                // if (result != null){
-                //    this.mOwner.NotifyQRCode(true, result.Text);
-                // }
-                // else
-                // {
-                //    this.mOwner.NotifyQRCode(false, string.Empty);
-                // }
                 isDecoding = false;
 
                 // using (var output = new FileOutputStream(mFile))

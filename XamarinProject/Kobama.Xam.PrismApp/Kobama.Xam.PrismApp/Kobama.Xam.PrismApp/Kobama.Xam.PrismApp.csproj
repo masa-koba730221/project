@@ -22,5 +22,15 @@
     <ProjectReference Include="..\..\Plugin\Logger\Kobama.Xam.Plugin.Log\Kobama.Xam.Plugin.Log.csproj" />
     <ProjectReference Include="..\..\Plugin\CameraPreview\Kobama.Xam.Plugin.Camera\Kobama.Xam.Plugin.Camera.csproj" />
     <ProjectReference Include="..\..\Plugin\QRCode\Kobama.Xam.Plugin.QRCode\Kobama.Xam.Plugin.QRCode.csproj" />
+    <ProjectReference Include="..\..\Plugin\Gallary\Kobama.Xam.Plugin.Gallary\Kobama.Xam.Plugin.Gallary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Views\CameraPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\CameraTestPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

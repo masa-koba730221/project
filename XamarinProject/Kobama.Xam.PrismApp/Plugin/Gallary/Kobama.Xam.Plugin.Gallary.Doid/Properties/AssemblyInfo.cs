@@ -1,15 +1,13 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AssemblyInfo.cs" company="Kobama">
+﻿// <copyright file="AssemblyInfo.cs" company="Kobama">
 // Copyright (c) Kobama. All rights reserved.
 // </copyright>
-// -----------------------------------------------------------------------
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
 // Information about this assembly is defined by the following attributes.
 // Change them to the values specific to your project.
-[assembly: AssemblyTitle("Kobama.Xam.Plugin.Camera.Droid")]
+[assembly: AssemblyTitle("Kobama.Xam.Plugin.Gallary.Doid")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("mkoba")]
