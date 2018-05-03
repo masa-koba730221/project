@@ -281,6 +281,8 @@ namespace Kobama.Xam.Plugin.Camera.iOS
                     bytes = data.ToArray();
                     this.NotifySavedIamage(bytes, new Size((int)uiImage.Size.Width, (int)uiImage.Size.Height));
                 }
+
+                // These codes should be fixed with reference to http://hiro128.hatenablog.jp/entry/2017/09/13/203715
             });
         }
 

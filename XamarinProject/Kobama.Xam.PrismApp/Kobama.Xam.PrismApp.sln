@@ -473,4 +473,10 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {184B2C6C-8F8F-4897-895E-CC8B8C73BD89}
 	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.StandardHeader = $1
+		$1.Text = @-----------------------------------------------------------------------\n<copyright file="${FileName}" company="mkoba">\nCopyright (c) mkoba. All rights reserved.\n</copyright>\n-----------------------------------------------------------------------
+		$0.VersionControlPolicy = $2
+	EndGlobalSection
 EndGlobal
