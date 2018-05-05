@@ -26,7 +26,8 @@ namespace Kobama.Xam.Plugin.Gallary.Doid
         /// <param name="size">The size.</param>
         /// <param name="path">The path.</param>
         /// <param name="fileName">Name of the file.</param>
-        public void SaveImage(byte[] image, Size size, string path, string fileName)
+        /// <returns>Saved Path</returns>
+        public string SaveImage(byte[] image, Size size, string path, string fileName)
         {
             var activity = global::Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity;
             var file = new File(Android.OS.Environment.ExternalStorageDirectory.Path + path);
@@ -67,6 +68,8 @@ namespace Kobama.Xam.Plugin.Gallary.Doid
             // save index
             var contentResolver = ((Context)activity).ContentResolver;
             Images.Media.InsertImage(contentResolver, attachName, fileName, string.Empty);
+
+            return attachName;
         }
     }
 }

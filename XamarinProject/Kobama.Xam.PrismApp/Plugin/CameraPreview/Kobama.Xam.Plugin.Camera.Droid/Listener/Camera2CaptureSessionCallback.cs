@@ -69,22 +69,18 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
             try
             {
                 // Auto focus should be continuous for camera preview.
-                this.owner.mPreviewRequestBuilder.Set(CaptureRequest.ControlAfMode, (int)ControlAFMode.ContinuousPicture);
+                this.owner.Setup3AControlLock(this.owner.mPreviewRequestBuilder);
 
-                // var list = this.owner.GetFpsRangeList();
-                this.owner.mPreviewRequestBuilder.Set(CaptureRequest.ControlAeTargetFpsRange, new Range(15, 15));
-
-                // Flash is automatically enabled when necessary.
-                this.owner.SetAutoFlash(this.owner.mPreviewRequestBuilder);
+                this.owner.mPreviewRequest = this.owner.mPreviewRequestBuilder.Build();
 
                 // Finally, we start displaying the camera preview.
-                this.owner.mCaptureSession.SetRepeatingRequest(this.owner.mPreviewRequestBuilder.Build(), this.owner.mCaptureCallback, this.owner.mBackgroundHandler);
-                this.owner.mCaptureSession.Capture(this.owner.mPreviewRequestBuilder.Build(), this.owner.mCaptureCallback, this.owner.mBackgroundHandler);
+                this.owner.mCaptureSession.SetRepeatingRequest(this.owner.mPreviewRequest, this.owner.mCaptureCallback, this.owner.mBackgroundHandler);
+//                this.owner.mCaptureSession.Capture(this.owner.mPreviewRequestBuilder.Build(), this.owner.mCaptureCallback, this.owner.mBackgroundHandler);
             }
             catch (CameraAccessException e)
             {
                 e.PrintStackTrace();
             }
         }
-    }
+   }
 }

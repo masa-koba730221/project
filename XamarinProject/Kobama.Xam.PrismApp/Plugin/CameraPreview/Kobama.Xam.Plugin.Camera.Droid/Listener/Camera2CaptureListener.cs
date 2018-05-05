@@ -77,6 +77,8 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                         Integer afState = (Integer)result.Get(CaptureResult.ControlAfState);
                         if (afState == null)
                         {
+                            this.logger.CalledMethod("STATE_WAITING_LOCK: afState is null");
+                            this.owner.State = CameraState.STATE_PICTURE_TAKEN;
                             this.owner.CaptureStillPicture();
                         }
                         else if ((afState.IntValue() == ((int)ControlAFState.FocusedLocked)) ||
@@ -87,12 +89,21 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                             if (aeState == null ||
                                     aeState.IntValue() == ((int)ControlAEState.Converged))
                             {
+                                this.logger.CalledMethod("STATE_WAITING_LOCK: aeState");
                                 this.owner.State = CameraState.STATE_PICTURE_TAKEN;
                                 this.owner.CaptureStillPicture();
                             }
                             else
                             {
                                 this.owner.RunPrecaptureSequence();
+                            }
+                        }
+                        else if (!this.owner.IsAFRun())
+                        {
+                            if (this.owner.HitTimeoutLocked()){
+                                this.logger.CalledMethod("STATE_WAITING_LOCK: !IsAFRun()");
+                                this.owner.State = CameraState.STATE_PICTURE_TAKEN;
+                                this.owner.CaptureStillPicture();
                             }
                         }
 

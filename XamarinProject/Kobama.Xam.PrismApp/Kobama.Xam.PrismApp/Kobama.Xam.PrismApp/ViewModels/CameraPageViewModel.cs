@@ -22,21 +22,21 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// <summary>
         /// The camera.
         /// </summary>
-        private ICameraControl camera;
+        protected ICameraControl camera;
 
         /// <summary>
         /// The title lens button.
         /// </summary>
-        private string titleLensButton;
+        protected string titleLensButton;
 
         /// <summary>
         /// The lens mode.
         /// </summary>
-        private CameraLens lensMode = CameraLens.Rear;
+        protected CameraLens lensMode = CameraLens.Rear;
 
-        private IDeviceService device;
+        protected IDeviceService device;
 
-        private IGallaryService gallary;
+        protected IGallaryService gallary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CameraPageViewModel"/> class.
@@ -53,6 +53,7 @@ namespace Kobama.Xam.PrismApp.ViewModels
             : base(navigationService)
         {
             this.gallary = gallary;
+            this.device = device;
 
             this.TitleLensButton = "Front";
             this.camera = camera;
@@ -97,13 +98,19 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// Gets the command change lens.
         /// </summary>
         /// <value>The command change lens.</value>
-        public DelegateCommand CommandChangeLens { get; }
+        public DelegateCommand CommandChangeLens { get; protected set; }
 
         /// <summary>
         /// Gets the command shot.
         /// </summary>
         /// <value>The command shot.</value>
-        public DelegateCommand CommandShot { get; }
+        public DelegateCommand CommandShot { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the saved path.
+        /// </summary>
+        /// <value>The saved path.</value>
+        public string SavedPath { get; set; }
 
         /// <summary>
         /// On the resume.
@@ -134,7 +141,7 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// <summary>
         /// Events the handeler camera opened.
         /// </summary>
-        private void EventHandelerCameraOpened()
+        protected void EventHandelerCameraOpened()
         {
             this.Logger.CalledMethod();
 
@@ -156,13 +163,13 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// </summary>
         /// <param name="image">Image</param>
         /// <param name="size">Size</param>
-        private void EventHandlerSavedImage(byte[] image, Size size)
+        protected virtual void EventHandlerSavedImage(byte[] image, Size size)
         {
             this.Logger.CalledMethod($"width:{size.Width} height:{size.Height}");
 
             try
             {
-                this.gallary.SaveImage(image, size, string.Empty, "photo");
+                this.SavedPath = this.gallary.SaveImage(image, size, string.Empty, "photo");
             }
             catch (Exception ex)
             {

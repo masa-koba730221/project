@@ -18,6 +18,7 @@ namespace Kobama.Xam.Plugin.Gallary
         /// <param name="size">The size.</param>
         /// <param name="pathm">The pathm.</param>
         /// <param name="fileName">Name of the file.</param>
-        void SaveImage(byte[] image, Size size, string pathm, string fileName);
+        /// <returns>Saved Path</returns>
+        string SaveImage(byte[] image, Size size, string pathm, string fileName);
     }
 }

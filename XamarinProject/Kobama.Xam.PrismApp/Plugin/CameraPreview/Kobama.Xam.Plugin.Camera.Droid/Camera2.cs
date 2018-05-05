@@ -105,6 +105,8 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// </summary>
         public CaptureRequest.Builder mPreviewRequestBuilder { get; set; }
 
+        public CaptureRequest mPreviewRequest { get; set; }
+
         /// <summary>
         /// The state of the m.
         /// </summary>
@@ -147,6 +149,15 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// The m camera characteristics.
         /// </summary>
         private CameraCharacteristics mCameraCharacteristics;
+
+        // Timeout for the pre-capture sequence.
+        private const long PRECAPTURE_TIMEOUT_MS = 1000;
+
+        /// <summary>
+        /// Timer to use with pre-capture sequence to ensure a timely capture if 3A convergence is taking
+        /// too long.
+        /// </summary>
+        private long mCaptureTimer;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="Camera2"/> class from being created.
@@ -451,7 +462,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             var sizeList = map.GetOutputSizes((int)ImageFormatType.Jpeg);
             largest = (Android.Util.Size)Collections.Max(Arrays.AsList(sizeList), new CompareSizesByArea());
 
-            var reader = ImageReader.NewInstance(largest.Width, largest.Height, ImageFormatType.Jpeg, /*maxImages*/2);
+            var reader = ImageReader.NewInstance(largest.Width, largest.Height, ImageFormatType.Jpeg, /*maxImages*/1);
             reader.SetOnImageAvailableListener(listener, handler);
 
             Log.Debug($"ImageReader Size:{largest.Width} ,{largest.Height}");
@@ -548,13 +559,64 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         }
 
         /// <summary>
+        /// Gets the AFA vailable mode list.
+        /// </summary>
+        /// <returns>The AFA vailable mode list.</returns>
+        public int[] GetAFAvailableModeList()
+        {
+            if (this.mCameraCharacteristics == null)
+            {
+                return null;
+            }
+
+            int[] list = null;
+            var value = this.mCameraCharacteristics.Get(CameraCharacteristics.ControlAfAvailableModes);
+            if (value != null)
+            {
+                list = value.ToArray<int>();
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Gets the AWBA vailable mode list.
+        /// </summary>
+        /// <returns>The AWBA vailable mode list.</returns>
+        public int[] GetAWBAvailableModeList()
+        {
+            if (this.mCameraCharacteristics == null)
+            {
+                return null;
+            }
+
+            return this.mCameraCharacteristics.Get(CameraCharacteristics.ControlAwbAvailableModes).ToArray<int>();
+        }
+
+        /// <summary>
+        /// Gets the lens minimum focus distande.
+        /// </summary>
+        /// <returns>The lens minimum focus distande.</returns>
+        public float? GetLensMinFocusDistande()
+        {
+            if (this.mCameraCharacteristics == null)
+            {
+                return null;
+            }
+
+            var minFocusDist = (float)this.mCameraCharacteristics.Get(CameraCharacteristics.LensInfoMinimumFocusDistance);
+
+            return minFocusDist;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="T:Kobama.Xam.Plugin.Camera.Droid.Camera2"/> class.
         /// </summary>
         /// <param name="image">Image.</param>
         /// <param name="size">Size</param>
         public void NotifySavedIamage(byte[] image, System.Drawing.Size size)
         {
-            if (this.CallbackSavedImage!=null)
+            if (this.CallbackSavedImage != null)
             {
                 this.CallbackSavedImage.Invoke(image, size);
             }
@@ -824,7 +886,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
                     surface,
                     this.mImageReader.Surface
                 };
-                this.mCameraDevice.CreateCaptureSession(surfaces, new Camera2CaptureSessionCallback(this), this.mBackgroundHandler);
+                this.mCameraDevice.CreateCaptureSession(surfaces, new Camera2CaptureSessionCallback(this), null);
             }
             catch (CameraAccessException e)
             {
@@ -912,6 +974,32 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         {
             Log.CalledMethod();
             this.LockFocus();
+            this.StartTimerLocked();
+        }
+
+        /// <summary>
+        /// Unlock the focus. This method should be called when still image capture sequence is
+        /// finished.
+        /// </summary>
+        public void UnlockFocus()
+        {
+            Log.CalledMethod();
+            try
+            {
+                // Reset the auto-focus trigger
+                this.mPreviewRequestBuilder.Set(CaptureRequest.ControlAfTrigger, (int)ControlAFTrigger.Cancel);
+                this.SetAutoFlash(this.mPreviewRequestBuilder);
+                this.mCaptureSession.Capture(this.mPreviewRequestBuilder.Build(), this.mCaptureCallback, this.mBackgroundHandler);
+                this.mPreviewRequestBuilder.Set(CaptureRequest.ControlAfTrigger, (int)ControlAFTrigger.Idle);
+
+                // After this, the camera will go back to the normal state of preview.
+                this.State = CameraState.STATE_PREVIEW;
+                this.mCaptureSession.SetRepeatingRequest(this.mPreviewRequest, this.mCaptureCallback, this.mBackgroundHandler);
+            }
+            catch (CameraAccessException e)
+            {
+                e.PrintStackTrace();
+            }
         }
 
         /// <summary>
@@ -988,16 +1076,10 @@ namespace Kobama.Xam.Plugin.Camera.Droid
                 }
 
                 // This is the CaptureRequest.Builder that we use to take a picture.
-                if (this.stillCaptureBuilder == null)
-                {
-                    this.stillCaptureBuilder = this.mCameraDevice.CreateCaptureRequest(CameraTemplate.StillCapture);
-                }
-
+                this.stillCaptureBuilder = this.mCameraDevice.CreateCaptureRequest(CameraTemplate.StillCapture);
                 this.stillCaptureBuilder.AddTarget(this.mImageReader.Surface);
 
-                // Use the same AE and AF modes as the preview.
-                this.stillCaptureBuilder.Set(CaptureRequest.ControlAfMode, (int)ControlAFMode.ContinuousPicture);
-                this.SetAutoFlash(this.stillCaptureBuilder);
+                this.Setup3AControlLock(this.stillCaptureBuilder);
 
                 // Orientation
                 int rotation = (int)activity.WindowManager.DefaultDisplay.Rotation;
@@ -1029,30 +1111,6 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         }
 
         /// <summary>
-        /// Unlock the focus. This method should be called when still image capture sequence is
-        /// finished.
-        /// </summary>
-        public void UnlockFocus()
-        {
-            Log.CalledMethod();
-            try
-            {
-                // Reset the auto-focus trigger
-                this.mPreviewRequestBuilder.Set(CaptureRequest.ControlAfTrigger, (int)ControlAFTrigger.Cancel);
-                this.SetAutoFlash(this.mPreviewRequestBuilder);
-                this.mCaptureSession.Capture(this.mPreviewRequestBuilder.Build(), this.mCaptureCallback, this.mBackgroundHandler);
-
-                // After this, the camera will go back to the normal state of preview.
-                this.State = CameraState.STATE_PREVIEW;
-                this.mCaptureSession.SetRepeatingRequest(this.mPreviewRequestBuilder.Build(), this.mCaptureCallback, this.mBackgroundHandler);
-            }
-            catch (CameraAccessException e)
-            {
-                e.PrintStackTrace();
-            }
-        }
-
-        /// <summary>
         /// Sets the auto flash.
         /// </summary>
         /// <param name="requestBuilder">Request builder.</param>
@@ -1074,5 +1132,117 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         {
             throw new NotImplementedException();
         }
-    }
+
+        /// <summary>
+        /// Setup3s the AC ontrol lock.
+        /// </summary>
+        public void Setup3AControlLock(CaptureRequest.Builder builder)
+        {
+            Log.CalledMethod();
+
+            builder.Set(CaptureRequest.ControlMode, (int)ControlMode.Auto);
+
+            if (this.IsAFRun())
+            {
+                Log.CalledMethod("In AF Run");
+
+                // If there is a "continuous picture" mode available, use it, otherwise default to AUTO.
+                if (this.Contains(this.GetAFAvailableModeList(), (int)ControlAFMode.ContinuousPicture))
+                {
+                    Log.CalledMethod("Set ContinuousPicture to AF Mode");
+                    builder.Set(CaptureRequest.ControlAfMode, (int)ControlAFMode.ContinuousPicture);
+                }
+                else
+                {
+                    Log.CalledMethod("Set Auto to AF Mode");
+                    builder.Set(CaptureRequest.ControlAfMode, (int)ControlAFMode.Auto);
+                }
+            }
+
+            if (this.Contains(this.GetAWBAvailableModeList(), (int)ControlAwbMode.Auto))
+            {
+                Log.CalledMethod("Set Auto to AWB Mode");
+                // Allow AWB to run auto-magically if this device supports this
+                builder.Set(CaptureRequest.ControlAwbMode, (int)ControlAwbMode.Auto);
+            }
+
+            // var list = this.owner.GetFpsRangeList();
+            builder.Set(CaptureRequest.ControlAeTargetFpsRange, new Range(15, 15));
+
+            // Flash is automatically enabled when necessary.
+            this.SetAutoFlash(builder);
+        }
+
+        /// <summary>
+        /// Return true if the given array contains the given integer.
+        /// </summary>
+        /// <returns><c>true</c>, if the array contains the given integer, <c>false</c> otherwise.</returns>
+        /// <param name="modes">array to check.</param>
+        /// <param name="mode">integer to get for.</param>
+        public bool Contains(int[] modes, int mode)
+        {
+            if (modes == null)
+            {
+                return false;
+            }
+
+            foreach (int i in modes)
+            {
+                if (i == mode)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Ises the legacy locked.
+        /// </summary>
+        /// <returns><c>true</c>, if legacy locked was ised, <c>false</c> otherwise.</returns>
+        public bool IsLegacyLocked()
+        {
+            return (int)this.mCameraCharacteristics.Get(CameraCharacteristics.InfoSupportedHardwareLevel) == (int)InfoSupportedHardwareLevel.Legacy;
+        }
+
+        /// <summary>
+        /// Ises the AF Run.
+        /// </summary>
+        /// <returns><c>true</c>, if AF was run, <c>false</c> otherwise.</returns>
+        public bool IsAFRun()
+        {
+            var value = this.GetLensMinFocusDistande();
+
+            if (value == null || value == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Start the timer for the pre-capture sequence.
+        ///
+        /// Call this only with {@link #mCameraStateLock} held.
+        /// </summary>
+        public void StartTimerLocked()
+        {
+            mCaptureTimer = SystemClock.ElapsedRealtime();
+        }
+
+        /// <summary>
+        /// Check if the timer for the pre-capture sequence has been hit.
+        ///
+        /// Call this only with {@link #mCameraStateLock} held.
+        /// </summary>
+        /// <returns><c>true</c>, if the timeout occurred, <c>false</c> otherwise.</returns>
+        public bool HitTimeoutLocked()
+        {
+            return (SystemClock.ElapsedRealtime() - mCaptureTimer) > PRECAPTURE_TIMEOUT_MS;
+        }
+     }
 }

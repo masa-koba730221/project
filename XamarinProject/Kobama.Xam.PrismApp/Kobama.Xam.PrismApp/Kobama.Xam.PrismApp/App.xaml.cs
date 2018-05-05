@@ -4,6 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Kobama.Xam.PrismApp.Settings;
 using Kobama.Xam.PrismApp.Views;
 using Prism;
 using Prism.DryIoc;
@@ -59,6 +60,7 @@ namespace Kobama.Xam.PrismApp
         /// <param name="containerRegistry">Container registry.</param>
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton(typeof(ISettingsService), typeof(SettingsImpl));
             containerRegistry.RegisterForNavigation<MyMasterDetailPage>();
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
@@ -66,6 +68,9 @@ namespace Kobama.Xam.PrismApp
             containerRegistry.RegisterForNavigation<QRCodeReaderPage>();
             containerRegistry.RegisterForNavigation<CameraTestPage>();
             containerRegistry.RegisterForNavigation<CameraPage>();
+            containerRegistry.RegisterForNavigation<AzureTestPage>();
+            containerRegistry.RegisterForNavigation<AzureFaceApiTopPage>();
+            containerRegistry.RegisterForNavigation<AzureFaceApiDetectPage>();
         }
     }
 }

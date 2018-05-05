@@ -30,9 +30,10 @@ namespace Kobama.Xam.PrismApp.ViewModels
 
             this.Menus = new ObservableCollection<MenuItem>
             {
-                new MenuItem { Title = "MainPage", Icon = string.Empty, TargetPage = "MainPage" },
-                new MenuItem { Title = "Camera",  Icon = "camera.png", TargetPage = "CameraTestPage" },
-                new MenuItem { Title = "QR Code",  Icon = "qr14.png", TargetPage = "QRCodeTestPage" }
+                new MenuItem { Title = "MainPage",  Icon = string.Empty,    TargetPage = "MainPage" },
+                new MenuItem { Title = "Azure",     Icon = string.Empty,    TargetPage = "AzureTestPage" },
+                new MenuItem { Title = "Camera",    Icon = "camera.png",    TargetPage = "CameraTestPage" },
+                new MenuItem { Title = "QR Code",   Icon = "qr14.png",      TargetPage = "QRCodeTestPage" }
             };
         }
 

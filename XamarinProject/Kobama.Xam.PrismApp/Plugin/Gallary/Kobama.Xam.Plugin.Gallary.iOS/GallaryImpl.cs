@@ -24,7 +24,8 @@ namespace Kobama.Xam.Plugin.Gallary.iOS
         /// <param name="size">The size.</param>
         /// <param name="path">The path.</param>
         /// <param name="fileName">Name of the file.</param>
-        public void SaveImage(byte[] image, Size size, string path, string fileName)
+        /// <returns>Saved Path</returns>
+        public string SaveImage(byte[] image, Size size, string path, string fileName)
         {
             var uiImage = new UIImage(NSData.FromArray(image));
 
@@ -35,6 +36,8 @@ namespace Kobama.Xam.Plugin.Gallary.iOS
                 Console.WriteLine("error:" + e?.LocalizedFailureReason + System.Environment.NewLine +
                                              e?.LocalizedDescription);
             });
+
+            return string.Empty;
         }
     }
 }
