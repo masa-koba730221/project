@@ -655,7 +655,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
                     return;
                 }
 
-                Android.Util.Size largest = (Android.Util.Size)Collections.Max(Arrays.AsList(map.GetOutputSizes((int)ImageFormatType.Jpeg)), new CompareSizesByArea());
+				Android.Util.Size largest = (Android.Util.Size)Collections.Max(Arrays.AsList(map.GetOutputSizes(Class.FromType(typeof(SurfaceTexture)))), new CompareSizesByArea());
 
                 // Find out if we need to swap dimension to get the preview size relative to sensor
                 // coordinate.
@@ -918,36 +918,32 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         {
             Log.CalledMethod($"viewWidth:{viewWidth} viewHeight:{viewHeight}");
 
-            Android.Util.Size previewSize;
             Activity activity = (Activity)this.mContext;
             if (this.mTextureView == null || this.mPreviewSize == null || activity == null)
             {
                 return;
             }
 
-            // We fit the aspect ratio of TextureView to the size of preview we picked.
-            var orientation = this.mContext.Resources.Configuration.Orientation;
-            if (orientation == Orientation.Landscape)
+            RectF bufferRect;
+            var sensorOrientation = this.GetSensorOrientation();
+            if (sensorOrientation == 90 || sensorOrientation == 270)
             {
-                previewSize = new Android.Util.Size(this.mPreviewSize.Width, this.mPreviewSize.Height);
-                Log.Debug($"aspect(Land): {this.mPreviewSize.Width} ,{this.mPreviewSize.Height}");
+				bufferRect = new RectF(0, 0, this.mPreviewSize.Height, this.mPreviewSize.Width);
             }
             else
             {
-                previewSize = new Android.Util.Size(this.mPreviewSize.Height, this.mPreviewSize.Width);
-                Log.Debug($"aspect(Port): {this.mPreviewSize.Height} ,{this.mPreviewSize.Width}");
+				bufferRect = new RectF(0, 0, this.mPreviewSize.Width, this.mPreviewSize.Height);
             }
 
-            var rotation = (int)activity.WindowManager.DefaultDisplay.Rotation;
+            var rotation = (int)this.GetWindowOrientation();
             Matrix matrix = new Matrix();
             RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
-            RectF bufferRect = new RectF(0, 0, this.mPreviewSize.Height, this.mPreviewSize.Width);
             float centerX = viewRect.CenterX();
             float centerY = viewRect.CenterY();
 
             bufferRect.Offset(centerX - bufferRect.CenterX(), centerY - bufferRect.CenterY());
             matrix.SetRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.Fill);
-            float scale = Math.Max((float)viewHeight / previewSize.Height, (float)viewWidth / previewSize.Width);
+            float scale = Math.Max((float)viewHeight / this.mPreviewSize.Height, (float)viewWidth / this.mPreviewSize.Width);
             Log.CalledMethod($"Scale:{scale}");
             matrix.PostScale(scale, scale, centerX, centerY);
 

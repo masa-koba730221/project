@@ -4,7 +4,7 @@
              xmlns:camera="clr-namespace:Kobama.Xam.Plugin.CameraPreview;assembly=Kobama.Xam.Plugin.CameraPreview"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"             
              prism:ViewModelLocator.AutowireViewModel="True"
-             Title="{Binding Title}"
+             Title="QR Code Reader"
              x:Class="Kobama.Xam.PrismApp.Views.QRCodeReaderPage">
 
     <ContentPage.ToolbarItems> 

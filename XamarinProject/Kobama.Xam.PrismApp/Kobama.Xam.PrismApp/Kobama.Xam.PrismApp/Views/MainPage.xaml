@@ -4,7 +4,7 @@
             x:Class="Kobama.Xam.PrismApp.Views.MainPage"
             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"             
             prism:ViewModelLocator.AutowireViewModel="True"
-            Title="{Binding Title}"
+            Title="Top Page"
             >
     <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
         <Label Text="Welcome to Kobama World" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>

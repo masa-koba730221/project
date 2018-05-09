@@ -217,7 +217,7 @@
       <Version>1.0.2</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>2.5.1.527436</Version>
+      <Version>3.0.0.446417</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -266,6 +266,8 @@
     <BundleResource Include="Resources\hamburger.png" />
     <BundleResource Include="Resources\hamburger%402x.png" />
     <BundleResource Include="Resources\qr14.png" />
+    <BundleResource Include="Resources\cloud%402x.png" />
+    <BundleResource Include="Resources\cloud.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\camera.png" />

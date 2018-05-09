@@ -14,7 +14,7 @@ namespace Kobama.Xam.PrismApp.ViewModels
     public class MyMasterDetailPageViewModel : ViewModelBase
     {
         private MenuItem selectedItem = null;
-        private bool isPresented;
+        private bool isPresented = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MyMasterDetailPageViewModel"/> class.
@@ -26,12 +26,11 @@ namespace Kobama.Xam.PrismApp.ViewModels
         {
             this.Logger.CalledMethod();
             this.Title = "MasterDetailPage";
-            this.IsPresented = false;
 
             this.Menus = new ObservableCollection<MenuItem>
             {
                 new MenuItem { Title = "MainPage",  Icon = string.Empty,    TargetPage = "MainPage" },
-                new MenuItem { Title = "Azure",     Icon = string.Empty,    TargetPage = "AzureTestPage" },
+                new MenuItem { Title = "Azure",     Icon = "cloud.png",     TargetPage = "AzureTestPage" },
                 new MenuItem { Title = "Camera",    Icon = "camera.png",    TargetPage = "CameraTestPage" },
                 new MenuItem { Title = "QR Code",   Icon = "qr14.png",      TargetPage = "QRCodeTestPage" }
             };
@@ -69,12 +68,11 @@ namespace Kobama.Xam.PrismApp.ViewModels
             {
                 this.SetProperty(ref this.selectedItem, value);
 
-                if (value == null)
+                if (value != null)
                 {
-                    return;
+					this.NavigationService.NavigateAsync($"NavigationPage/{value.TargetPage}");
                 }
 
-                this.NavigationService.NavigateAsync($"NavigationPage/{value.TargetPage}");
                 this.IsPresented = false;
             }
         }
