@@ -125,6 +125,14 @@
       <Project>{3ED0829C-FC0C-4961-ADE1-0BD0AC7B90B7}</Project>
       <Name>Kobama.Xam.Plugin.CameraPreview</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Face\Kobama.Xam.Plugin.Face.Droid\Kobama.Xam.Plugin.Face.Droid.csproj">
+      <Project>{8d4b6e96-5daa-4197-b80b-86d6f5f9c4c9}</Project>
+      <Name>Kobama.Xam.Plugin.Face.Droid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Face\Kobama.Xam.Plugin.Face\Kobama.Xam.Plugin.Face.csproj">
+      <Project>{cd09e298-12b9-4634-99f0-be74bf3c97e5}</Project>
+      <Name>Kobama.Xam.Plugin.Face</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Plugin\Logger\Kobama.Xam.Plugin.Log\Kobama.Xam.Plugin.Log.csproj">
       <Project>{F0C94312-EDE3-4C58-8EC2-45CA35C27EB9}</Project>
       <Name>Kobama.Xam.Plugin.Log</Name>

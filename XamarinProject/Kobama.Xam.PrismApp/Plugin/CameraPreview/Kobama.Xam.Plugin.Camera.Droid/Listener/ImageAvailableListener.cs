@@ -47,7 +47,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         public void OnImageAvailable(ImageReader reader)
         {
             // this.logger.CallMethod()
-            this.owner.mBackgroundHandler.Post(new ImageSaver(this.owner, reader.AcquireNextImage()));
+            this.owner.BackgroundHandler.Post(new ImageSaver(this.owner, reader.AcquireNextImage()));
         }
 
         /// <summary>
@@ -56,18 +56,9 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         private class ImageSaver : Java.Lang.Object, IRunnable
         {
             private static bool isDecoding = false;
-
-            /// <summary>
-            /// The logger.
-            /// </summary>
             private readonly Logger logger = new Logger(nameof(ImageSaver));
-
-            /// <summary>
-            /// The JPEG image
-            /// </summary>
-            private Image mImage;
-
-            private Camera2 mOwner;
+            private readonly Image image;
+            private readonly Camera2 owner;
 
             /// <summary>
             /// Initializes a new instance of the
@@ -83,7 +74,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                     throw new System.ArgumentNullException("image");
                 }
 
-                this.mOwner = fragment ?? throw new System.ArgumentNullException("camera2");
+                this.owner = fragment ?? throw new System.ArgumentNullException("camera2");
 
                 if (isDecoding)
                 {
@@ -93,7 +84,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
 
                 isDecoding = true;
 
-                this.mImage = image;
+                this.image = image;
             }
 
             /// <summary>
@@ -102,18 +93,18 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
             public void Run()
             {
                 // this.logger.CallMethod();
-                if (this.mImage == null)
+                if (this.image == null)
                 {
                     return;
                 }
 
-                ByteBuffer buffer = this.mImage.GetPlanes()[0].Buffer;
+                ByteBuffer buffer = this.image.GetPlanes()[0].Buffer;
                 byte[] bytes = new byte[buffer.Remaining()];
                 buffer.Get(bytes);
 
-                this.mOwner.NotifySavedIamage(bytes, new System.Drawing.Size(this.mImage.Width, this.mImage.Height));
+                this.owner.NotifySavedIamage(bytes, new System.Drawing.Size(this.image.Width, this.image.Height));
 
-                this.mImage.Close();
+                this.image.Close();
 
                 isDecoding = false;
 
@@ -129,7 +120,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                 //    }
                 //    finally
                 //    {
-                //        mImage.Close();
+                //        image.Close();
                 //    }
                 // }
             }

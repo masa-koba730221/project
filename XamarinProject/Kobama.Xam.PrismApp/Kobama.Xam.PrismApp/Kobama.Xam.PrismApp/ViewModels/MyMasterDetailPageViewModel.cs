@@ -29,10 +29,11 @@ namespace Kobama.Xam.PrismApp.ViewModels
 
             this.Menus = new ObservableCollection<MenuItem>
             {
-                new MenuItem { Title = "MainPage",  Icon = string.Empty,    TargetPage = "MainPage" },
-                new MenuItem { Title = "Azure",     Icon = "cloud.png",     TargetPage = "AzureTestPage" },
-                new MenuItem { Title = "Camera",    Icon = "camera.png",    TargetPage = "CameraTestPage" },
-                new MenuItem { Title = "QR Code",   Icon = "qr14.png",      TargetPage = "QRCodeTestPage" }
+                new MenuItem { Title = "MainPage",      Icon = string.Empty,    TargetPage = "MainPage" },
+                new MenuItem { Title = "FaceDetector",  Icon = string.Empty,    TargetPage = "FaceDetectorTopPage" },
+                new MenuItem { Title = "Azure",         Icon = "cloud.png",     TargetPage = "AzureTestPage" },
+                new MenuItem { Title = "Camera",        Icon = "camera.png",    TargetPage = "CameraTestPage" },
+                new MenuItem { Title = "QR Code",       Icon = "qr14.png",      TargetPage = "QRCodeTestPage" }
             };
         }
 
@@ -70,7 +71,7 @@ namespace Kobama.Xam.PrismApp.ViewModels
 
                 if (value != null)
                 {
-					this.NavigationService.NavigateAsync($"NavigationPage/{value.TargetPage}");
+                    this.NavigationService.NavigateAsync($"NavigationPage/{value.TargetPage}");
                 }
 
                 this.IsPresented = false;

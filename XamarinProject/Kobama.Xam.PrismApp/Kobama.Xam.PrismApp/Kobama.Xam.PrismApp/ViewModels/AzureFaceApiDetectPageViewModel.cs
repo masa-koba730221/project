@@ -22,16 +22,16 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// <summary>
         /// The dialog.
         /// </summary>
-        protected IPageDialogService dialog;
+        private readonly IPageDialogService dialog;
 
-        protected ISettingsService settings;
+        private readonly ISettingsService settings;
 
-        private string faceApiRoot;
-        private string faceApiKey;
+        private readonly string faceApiRoot;
+        private readonly string faceApiKey;
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="T:Kobama.Xam.PrismApp.ViewModels.<see cref="AzureFaceApiDetectPageViewModel"/>"/> class.
+        /// <see cref="AzureFaceApiDetectPageViewModel"/> class.
         /// </summary>
         /// <param name="navigationService">Navigation service.</param>
         /// <param name="camera">Camera.</param>
@@ -68,7 +68,7 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// <param name="size">Size.</param>
         protected override void EventHandlerSavedImage(byte[] image, Size size)
         {
-            this.device.BeginInvokeOnMainThread(async () =>
+            this.DeviceService.BeginInvokeOnMainThread(async () =>
             {
                 try
                 {

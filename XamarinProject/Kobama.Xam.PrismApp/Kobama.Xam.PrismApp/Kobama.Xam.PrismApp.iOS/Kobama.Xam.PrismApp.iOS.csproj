@@ -13,6 +13,7 @@
     <AssemblyName>Kobama_Xam_PrimsApp.iOS</AssemblyName>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,10 +49,14 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchArch>ARM64</MtouchArch>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: masa.koba730221@gmail.com (474WQM9Y65)</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <CodesignEntitlements>
+    </CodesignEntitlements>
     <DocumentationFile>bin\iPhone\Debug\Kobama_Xam_PrimsApp.iOS.xml</DocumentationFile>
+    <CodesignProvision>iOS Team Provisioning Profile: jp.kobama.xam.prismapp</CodesignProvision>
+    <CodesignExtraArgs />
+    <CodesignResourceRules />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -236,6 +241,16 @@
     <ProjectReference Include="..\..\Plugin\CameraPreview\Kobama.Xam.Plugin.CameraPreview\Kobama.Xam.Plugin.CameraPreview.csproj">
       <Project>{3ED0829C-FC0C-4961-ADE1-0BD0AC7B90B7}</Project>
       <Name>Kobama.Xam.Plugin.CameraPreview</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Face\Kobama.Xam.Plugin.Face.iOS\Kobama.Xam.Plugin.Face.iOS.csproj">
+      <Project>{0a842c5d-b235-4ed1-8840-d9895c3956f7}</Project>
+      <Name>Kobama.Xam.Plugin.Face.iOS</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Face\Kobama.Xam.Plugin.Face\Kobama.Xam.Plugin.Face.csproj">
+      <Project>{cd09e298-12b9-4634-99f0-be74bf3c97e5}</Project>
+      <Name>Kobama.Xam.Plugin.Face</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Plugin\Logger\Kobama.Xam.Plugin.Log\Kobama.Xam.Plugin.Log.csproj">
       <Project>{F0C94312-EDE3-4C58-8EC2-45CA35C27EB9}</Project>

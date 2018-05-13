@@ -19,10 +19,11 @@ namespace Kobama.Xam.PrismApp.ViewModels
     /// </summary>
     public class QRCodeReaderPageViewModel : ViewModelBase
     {
-        /// <summary>
-        /// The camera.
-        /// </summary>
-        private ICameraControl camera;
+        private readonly IQRCodeControl qRCodeService;
+
+        private readonly IDeviceService device;
+
+        private readonly ICameraControl camera;
 
         /// <summary>
         /// The title lens button.
@@ -33,13 +34,6 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// The lens mode.
         /// </summary>
         private CameraLens lensMode = CameraLens.Rear;
-
-        /// <summary>
-        /// The QR Code service.
-        /// </summary>
-        private IQRCodeControl qRCodeService;
-
-        private IDeviceService device;
 
         private bool isDecoding;
 

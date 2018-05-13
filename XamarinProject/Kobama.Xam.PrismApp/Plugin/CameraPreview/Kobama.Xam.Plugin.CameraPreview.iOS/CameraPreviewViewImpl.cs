@@ -20,9 +20,9 @@ namespace Kobama.Xam.Plugin.CameraPreview.iOS
     public class CameraPreviewViewImpl : UIView
     {
         private static readonly Logger Log = new Logger(nameof(CameraPreviewViewImpl));
-        private AVCaptureVideoPreviewLayer previewLayer;
+        private readonly AVCaptureVideoPreviewLayer previewLayer;
+        private readonly Camera.iOS.Camera mCamera;
         private UIPinchGestureRecognizer pinch;
-        private Camera.iOS.Camera mCamera;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CameraPreviewViewImpl"/> class.
@@ -107,6 +107,7 @@ namespace Kobama.Xam.Plugin.CameraPreview.iOS
         protected virtual void OnTapped()
         {
             Log.CalledMethod();
+            this.CameraControl.TakePicture();
             this.Tapped?.Invoke(this, new EventArgs());
         }
 
@@ -133,5 +134,5 @@ namespace Kobama.Xam.Plugin.CameraPreview.iOS
                 AVCaptureDevice.RequestAccessForMediaType(AVMediaType.Video, (accessGranted) => System.Diagnostics.Debug.WriteLine(accessGranted));
             }
         }
-	}
+    }
 }

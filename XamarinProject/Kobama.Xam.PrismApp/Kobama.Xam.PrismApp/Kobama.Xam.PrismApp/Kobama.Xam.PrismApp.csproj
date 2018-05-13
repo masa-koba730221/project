@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Plugin\CameraPreview\Kobama.Xam.Plugin.CameraPreview\Kobama.Xam.Plugin.CameraPreview.csproj" />
+    <ProjectReference Include="..\..\Plugin\Face\Kobama.Xam.Plugin.Face\Kobama.Xam.Plugin.Face.csproj" />
     <ProjectReference Include="..\..\Plugin\Logger\Kobama.Xam.Plugin.Log\Kobama.Xam.Plugin.Log.csproj" />
     <ProjectReference Include="..\..\Plugin\CameraPreview\Kobama.Xam.Plugin.Camera\Kobama.Xam.Plugin.Camera.csproj" />
     <ProjectReference Include="..\..\Plugin\QRCode\Kobama.Xam.Plugin.QRCode\Kobama.Xam.Plugin.QRCode.csproj" />
@@ -40,6 +41,12 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\CameraTestPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\FaceDetectorPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\FaceDetectorTopPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

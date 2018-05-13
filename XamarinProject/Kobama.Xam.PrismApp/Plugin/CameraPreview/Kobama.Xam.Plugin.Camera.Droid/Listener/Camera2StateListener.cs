@@ -50,8 +50,8 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
             this.logger.CalledMethod();
 
             // This method is called when the camera is opened.  We start camera preview here.
-            this.owner.mCameraOpenCloseLock.Release();
-            this.owner.mCameraDevice = camera;
+            this.owner.CameraOpenCloseLock.Release();
+            this.owner.CameraDevice = camera;
             this.owner.CreateCameraPreviewSession();
         }
 
@@ -62,9 +62,9 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         public override void OnDisconnected(CameraDevice camera)
         {
             this.logger.CalledMethod();
-            this.owner.mCameraOpenCloseLock.Release();
+            this.owner.CameraOpenCloseLock.Release();
             camera.Close();
-            this.owner.mCameraDevice = null;
+            this.owner.CameraDevice = null;
         }
 
         /// <summary>
@@ -75,9 +75,9 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         public override void OnError(CameraDevice camera, CameraError error)
         {
             this.logger.CalledMethod();
-            this.owner.mCameraOpenCloseLock.Release();
+            this.owner.CameraOpenCloseLock.Release();
             camera.Close();
-            this.owner.mCameraDevice = null;
+            this.owner.CameraDevice = null;
             if (this.owner == null)
             {
                 return;

@@ -13,6 +13,8 @@ namespace Kobama_Xam_PrismApp.iOS
     using Kobama.Xam.Plugin.Camera;
     using Kobama.Xam.Plugin.Camera.iOS;
     using Kobama.Xam.Plugin.CameraPreview.iOS;
+    using Kobama.Xam.Plugin.Face;
+    using Kobama.Xam.Plugin.Face.iOS;
     using Kobama.Xam.Plugin.Gallary;
     using Kobama.Xam.Plugin.Gallary.iOS;
     using Kobama.Xam.Plugin.QRCode;
@@ -57,6 +59,7 @@ namespace Kobama_Xam_PrismApp.iOS
                 container.RegisterInstance(typeof(ICameraControl), Camera.Instance);
                 container.Register(typeof(IQRCodeControl), typeof(QRCodeControlImpl));
                 container.Register(typeof(IGallaryService), typeof(GallaryImpl));
+                container.Register(typeof(IFaceDetectorService), typeof(FaceDetectorImpl));
             }
         }
     }

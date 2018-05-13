@@ -3,7 +3,6 @@
 // Copyright (c) Kobama. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
-using System;
 namespace Kobama.Xam.PrismApp.Settings
 {
     /// <summary>
@@ -15,12 +14,12 @@ namespace Kobama.Xam.PrismApp.Settings
         /// Gets or sets the Azure Face API root.
         /// </summary>
         /// <value>The face API root.</value>
-        string AzureFaceApiRoot {get; set;}
+        string AzureFaceApiRoot { get; set; }
 
         /// <summary>
         /// Gets or sets the Azure Face API key.
         /// </summary>
         /// <value>The azure face API key.</value>
-        string AzureFaceApiKey {get; set;}
+        string AzureFaceApiKey { get; set; }
     }
 }

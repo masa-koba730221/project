@@ -6,15 +6,15 @@
 
 namespace Kobama.Xam.Plugin.Camera.Droid.Listener
 {
-	using Android.Hardware.Camera2;
-	using Android.Util;
-	using Android.Views;
-	using Kobama.Xam.Plugin.Log;
+    using Android.Hardware.Camera2;
+    using Android.Util;
+    using Android.Views;
+    using Kobama.Xam.Plugin.Log;
 
-	/// <summary>
-	/// Camera2 capture still picture session callback.
-	/// </summary>
-	public class Camera2CaptureStillPictureSessionCallback : CameraCaptureSession.CaptureCallback
+    /// <summary>
+    /// Camera2 capture still picture session callback.
+    /// </summary>
+    public class Camera2CaptureStillPictureSessionCallback : CameraCaptureSession.CaptureCallback
     {
         /// <summary>
         /// The logger.
@@ -33,12 +33,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <param name="owner">Owner.</param>
         public Camera2CaptureStillPictureSessionCallback(Camera2 owner)
         {
-            if (owner == null)
-            {
-                throw new System.ArgumentNullException("owner");
-            }
-
-            this.owner = owner;
+            this.owner = owner ?? throw new System.ArgumentNullException("owner");
         }
 
         /// <summary>

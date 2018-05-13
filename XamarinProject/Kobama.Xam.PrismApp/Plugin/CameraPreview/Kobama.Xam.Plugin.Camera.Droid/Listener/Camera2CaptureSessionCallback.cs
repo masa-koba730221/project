@@ -23,7 +23,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         /// <summary>
         /// The logger.
         /// </summary>
-        private Logger logger = new Logger(nameof(Camera2CaptureSessionCallback));
+        private readonly Logger logger = new Logger(nameof(Camera2CaptureSessionCallback));
 
         /// <summary>
         /// Initializes a new instance of the
@@ -33,12 +33,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         public Camera2CaptureSessionCallback(Camera2 owner)
         {
             this.logger.CalledMethod();
-            if (owner == null)
-            {
-                throw new System.ArgumentNullException("owner");
-            }
-
-            this.owner = owner;
+            this.owner = owner ?? throw new System.ArgumentNullException("owner");
         }
 
         /// <summary>
@@ -59,23 +54,22 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
             this.logger.CalledMethod();
 
             // The camera is already closed
-            if (this.owner.mCameraDevice == null)
+            if (this.owner.CameraDevice == null)
             {
                 return;
             }
 
             // When the session is ready, we start displaying the preview.
-            this.owner.mCaptureSession = session;
+            this.owner.CaptureSession = session;
             try
             {
                 // Auto focus should be continuous for camera preview.
-                this.owner.Setup3AControlLock(this.owner.mPreviewRequestBuilder);
+                this.owner.Setup3AControlLock(this.owner.PreviewRequestBuilder);
 
-                this.owner.mPreviewRequest = this.owner.mPreviewRequestBuilder.Build();
+                this.owner.PreviewRequest = this.owner.PreviewRequestBuilder.Build();
 
                 // Finally, we start displaying the camera preview.
-                this.owner.mCaptureSession.SetRepeatingRequest(this.owner.mPreviewRequest, this.owner.mCaptureCallback, this.owner.mBackgroundHandler);
-//                this.owner.mCaptureSession.Capture(this.owner.mPreviewRequestBuilder.Build(), this.owner.mCaptureCallback, this.owner.mBackgroundHandler);
+                this.owner.CaptureSession.SetRepeatingRequest(this.owner.PreviewRequest, this.owner.CaptureCallback, this.owner.BackgroundHandler);
             }
             catch (CameraAccessException e)
             {

@@ -34,12 +34,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
         public Camera2CaptureListener(Camera2 owner)
         {
             this.logger.CalledMethod();
-            if (owner == null)
-            {
-                throw new System.ArgumentNullException("owner");
-            }
-
-            this.owner = owner;
+            this.owner = owner ?? throw new System.ArgumentNullException("owner");
         }
 
         /// <summary>
@@ -100,7 +95,8 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                         }
                         else if (!this.owner.IsAFRun())
                         {
-                            if (this.owner.HitTimeoutLocked()){
+                            if (this.owner.HitTimeoutLocked())
+                            {
                                 this.logger.CalledMethod("STATE_WAITING_LOCK: !IsAFRun()");
                                 this.owner.State = CameraState.STATE_PICTURE_TAKEN;
                                 this.owner.CaptureStillPicture();

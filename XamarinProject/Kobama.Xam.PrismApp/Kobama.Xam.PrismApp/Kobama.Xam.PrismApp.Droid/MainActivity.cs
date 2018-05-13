@@ -11,6 +11,8 @@ namespace Kobama.Xam.PrismApp.Droid
     using Android.OS;
     using Kobama.Xam.Plugin.Camera;
     using Kobama.Xam.Plugin.Camera.Droid;
+    using Kobama.Xam.Plugin.Face;
+    using Kobama.Xam.Plugin.Face.Droid;
     using Kobama.Xam.Plugin.QRCode;
     using Kobama.Xam.Plugin.QRCode.Droid;
     using Kobama.Xam.PrismApp;
@@ -52,6 +54,7 @@ namespace Kobama.Xam.PrismApp.Droid
                 container.RegisterInstance<ICameraControl>(Camera2.Instance);
                 container.Register(typeof(IQRCodeControl), typeof(QRCodeControlImpl));
                 container.Register(typeof(Plugin.Gallary.IGallaryService), typeof(Plugin.Gallary.Doid.GallaryImpl));
+                container.Register(typeof(IFaceDetectorService), typeof(FaceDetectorImpl));
             }
         }
     }

@@ -19,24 +19,8 @@ namespace Kobama.Xam.PrismApp.ViewModels
     /// <seealso cref="Prism.Mvvm.BindableBase" />
     public class CameraPageViewModel : ViewModelBase
     {
-        /// <summary>
-        /// The camera.
-        /// </summary>
-        protected ICameraControl camera;
-
-        /// <summary>
-        /// The title lens button.
-        /// </summary>
-        protected string titleLensButton;
-
-        /// <summary>
-        /// The lens mode.
-        /// </summary>
-        protected CameraLens lensMode = CameraLens.Rear;
-
-        protected IDeviceService device;
-
-        protected IGallaryService gallary;
+        private string titleLensButton;
+        private CameraLens lensMode = CameraLens.Rear;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CameraPageViewModel"/> class.
@@ -52,35 +36,35 @@ namespace Kobama.Xam.PrismApp.ViewModels
             IDeviceService device)
             : base(navigationService)
         {
-            this.gallary = gallary;
-            this.device = device;
+            this.GallaryService = gallary;
+            this.DeviceService = device;
 
             this.TitleLensButton = "Front";
-            this.camera = camera;
-            this.camera.ImageMode = ImageAvailableMode.Auto;
-            this.camera.CallabckOpened += this.EventHandelerCameraOpened;
-            this.camera.CallbackSavedImage += this.EventHandlerSavedImage;
+            this.CameraService = camera;
+            this.CameraService.ImageMode = ImageAvailableMode.Auto;
+            this.CameraService.CallabckOpened += this.EventHandelerCameraOpened;
+            this.CameraService.CallbackSavedImage += this.EventHandlerSavedImage;
             this.CommandChangeLens = new DelegateCommand(() =>
             {
                 if (this.lensMode == CameraLens.Rear)
                 {
                     this.Logger.CalledMethod("to Front");
                     this.TitleLensButton = "Front";
-                    this.camera.ChangeLens(CameraLens.Front);
+                    this.CameraService.ChangeLens(CameraLens.Front);
                     this.lensMode = CameraLens.Front;
                 }
                 else
                 {
                     this.Logger.CalledMethod("to Rear");
                     this.TitleLensButton = "Rear";
-                    this.camera.ChangeLens(CameraLens.Rear);
+                    this.CameraService.ChangeLens(CameraLens.Rear);
                     this.lensMode = CameraLens.Rear;
                 }
             });
 
             this.CommandShot = new DelegateCommand(() =>
             {
-                this.camera.TakePicture();
+                this.CameraService.TakePicture();
             });
         }
 
@@ -95,15 +79,19 @@ namespace Kobama.Xam.PrismApp.ViewModels
         }
 
         /// <summary>
-        /// Gets the command change lens.
+        /// Gets or sets the command change lens.
         /// </summary>
-        /// <value>The command change lens.</value>
+        /// <value>
+        /// The command change lens.
+        /// </value>
         public DelegateCommand CommandChangeLens { get; protected set; }
 
         /// <summary>
-        /// Gets the command shot.
+        /// Gets or sets the command shot.
         /// </summary>
-        /// <value>The command shot.</value>
+        /// <value>
+        /// The command shot.
+        /// </value>
         public DelegateCommand CommandShot { get; protected set; }
 
         /// <summary>
@@ -113,12 +101,34 @@ namespace Kobama.Xam.PrismApp.ViewModels
         public string SavedPath { get; set; }
 
         /// <summary>
+        /// Gets the camera service.
+        /// </summary>
+        /// <value>
+        /// The camera service.
+        /// </value>
+        protected ICameraControl CameraService { get; private set; }
+
+        /// <summary>
+        /// Gets the device service.
+        /// </summary>
+        /// <value>
+        /// The device service.
+        /// </value>
+        protected IDeviceService DeviceService { get; private set; }
+
+        /// <summary>
+        /// Gets the gallary service.
+        /// </summary>
+        /// <value>The gallary service.</value>
+        protected IGallaryService GallaryService { get; private set; }
+
+        /// <summary>
         /// On the resume.
         /// </summary>
         public override void OnResume()
         {
             base.OnResume();
-            this.camera.OnResume();
+            this.CameraService.OnResume();
         }
 
         /// <summary>
@@ -126,7 +136,7 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// </summary>
         public override void OnSleep()
         {
-            this.camera.OnPause();
+            this.CameraService.OnPause();
             base.OnSleep();
         }
 
@@ -135,7 +145,7 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// </summary>
         public override void Destroy()
         {
-            this.camera.OnDestroy();
+            this.CameraService.OnDestroy();
         }
 
         /// <summary>
@@ -145,13 +155,13 @@ namespace Kobama.Xam.PrismApp.ViewModels
         {
             this.Logger.CalledMethod();
 
-            var sizes = this.camera.GetSizeList();
+            var sizes = this.CameraService.GetSizeList();
             foreach (var size in sizes)
             {
                 this.Logger.Debug($"Size width:{size.Width}, height:{size.Height}");
             }
 
-            var ranges = this.camera.GetFpsRangeList();
+            var ranges = this.CameraService.GetFpsRangeList();
             foreach (var range in ranges)
             {
                 this.Logger.Debug($"Range lower:{range.Lower} upper:{range.Upper}");
@@ -169,7 +179,7 @@ namespace Kobama.Xam.PrismApp.ViewModels
 
             try
             {
-                this.SavedPath = this.gallary.SaveImage(image, size, string.Empty, "photo");
+                this.SavedPath = this.GallaryService.SaveImage(image, size, string.Empty, "photo");
             }
             catch (Exception ex)
             {

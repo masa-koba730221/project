@@ -71,6 +71,8 @@ namespace Kobama.Xam.PrismApp
             containerRegistry.RegisterForNavigation<AzureTestPage>();
             containerRegistry.RegisterForNavigation<AzureFaceApiTopPage>();
             containerRegistry.RegisterForNavigation<AzureFaceApiDetectPage>();
+            containerRegistry.RegisterForNavigation<FaceDetectorPage>();
+            containerRegistry.RegisterForNavigation<FaceDetectorTopPage>();
         }
     }
 }
