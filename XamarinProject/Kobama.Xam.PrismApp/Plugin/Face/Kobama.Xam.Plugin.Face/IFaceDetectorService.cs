@@ -3,6 +3,8 @@
 // Copyright (c) Kobama. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using System.Drawing;
+
 namespace Kobama.Xam.Plugin.Face
 {
     /// <summary>
