@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="Kobama.Xam.PrismApp.Views.AzureFaceApiPersonGroupListPage"
+             Title = "Person Group List"
+             NavigationPage.BackButtonTitle=""
+             >
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding CommandAddNePersonGroup}" Text="Add" IsEnabled="{Binding IsAddable}" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="{Binding TrainStatus}"/>
+            <ListView
+                ItemsSource="{Binding PersonGroupList}"
+                SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding PersonGroupName}" TextColor="Black">
+                            <TextCell.ContextActions>
+                                <MenuItem Text="Delete"
+                                          Command="{Binding CommandDeletePersonGroup}"
+                                          CommandParameter="{Binding .}"
+                                          IsDestructive="True" />
+                            </TextCell.ContextActions>
+                        </TextCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

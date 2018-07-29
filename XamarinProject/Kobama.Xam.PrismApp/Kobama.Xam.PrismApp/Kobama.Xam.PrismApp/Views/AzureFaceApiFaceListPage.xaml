@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="Kobama.Xam.PrismApp.Views.AzureFaceApiFaceListPage"
+             Title = "{Binding Title}"
+             NavigationPage.BackButtonTitle=""
+             >
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding CommandAddNewFace}" Text="Add"/>
+    </ContentPage.ToolbarItems>
+    <ListView
+        ItemsSource="{Binding FaceList}"
+        SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <TextCell Text="{Binding PersistedFaceIdText}" TextColor="Black">
+                    <TextCell.ContextActions>
+                        <MenuItem Text="Delete"
+                                  Command="{Binding CommandDeleteFace}"
+                                  CommandParameter="{Binding .}"
+                                  IsDestructive="True" />
+                    </TextCell.ContextActions>
+                </TextCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</ContentPage>
