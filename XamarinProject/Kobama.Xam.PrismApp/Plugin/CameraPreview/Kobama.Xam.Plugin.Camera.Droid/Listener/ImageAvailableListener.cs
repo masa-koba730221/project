@@ -6,6 +6,9 @@
 
 namespace Kobama.Xam.Plugin.Camera.Droid.Listener
 {
+    using System.IO;
+    using System.Threading.Tasks;
+    using Android.Graphics;
     using Android.Media;
     using Java.IO;
     using Java.Lang;
@@ -71,10 +74,10 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
                 // this.logger.CallMethod();
                 if (image == null)
                 {
-                    throw new System.ArgumentNullException("image");
+                    throw new System.ArgumentNullException(nameof(Image));
                 }
 
-                this.owner = fragment ?? throw new System.ArgumentNullException("camera2");
+                this.owner = fragment ?? throw new System.ArgumentNullException(nameof(Camera2));
 
                 if (isDecoding)
                 {
@@ -92,37 +95,40 @@ namespace Kobama.Xam.Plugin.Camera.Droid.Listener
             /// </summary>
             public void Run()
             {
-                // this.logger.CallMethod();
+                // this.logger.CalledMethod();
                 if (this.image == null)
                 {
                     return;
                 }
 
-                ByteBuffer buffer = this.image.GetPlanes()[0].Buffer;
-                byte[] bytes = new byte[buffer.Remaining()];
-                buffer.Get(bytes);
+                Task.Run(() =>
+                {
+                    byte[] byteImage;
+                    System.Drawing.Size size;
+                    if (this.image.Format == ImageFormatType.Jpeg)
+                    {
+                        Image.Plane[] planes = this.image.GetPlanes();
+                        var buffer = planes[0].Buffer;
+                        byteImage = new byte[buffer.Capacity()];
+                        buffer.Get(byteImage);
+                        size = new System.Drawing.Size(this.image.Width, this.image.Height);
+                    }
+                    else
+                    {
+                        var bmp = ImageUtils.ImageToByteArray(this.image, this.owner.GetOrientation());
+                        using (var stream = new MemoryStream())
+                        {
+                            bmp.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
+                            byteImage = stream.ToArray();
+                        }
+                        size = new System.Drawing.Size(bmp.Width, bmp.Height);
+                    }
 
-                this.owner.NotifySavedIamage(bytes, new System.Drawing.Size(this.image.Width, this.image.Height));
+                    this.owner.NotifySavedIamage(byteImage, size);
 
-                this.image.Close();
-
-                isDecoding = false;
-
-                // using (var output = new FileOutputStream(mFile))
-                // {
-                //    try
-                //    {
-                //        output.Write(bytes);
-                //    }
-                //    catch (IOException e)
-                //    {
-                //        e.PrintStackTrace();
-                //    }
-                //    finally
-                //    {
-                //        image.Close();
-                //    }
-                // }
+                    this.image.Close();
+                    isDecoding = false;
+                });
             }
         }
     }

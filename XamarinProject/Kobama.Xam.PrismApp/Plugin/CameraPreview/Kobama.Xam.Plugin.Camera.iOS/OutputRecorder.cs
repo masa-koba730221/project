@@ -51,11 +51,15 @@ namespace Kobama.Xam.Plugin.Camera.iOS
         {
             try
             {
-                this.GetImageFromSampleBuffer(sampleBuffer);
+                var uiImage = this.GetImageFromSampleBuffer(sampleBuffer);
+
+                Console.WriteLine("Orientation: " + uiImage.Orientation);
+                using (var data = uiImage.AsJPEG())
+                {
+                    this.camera.RaisedImage(data.ToArray(), new Size((int)uiImage.Size.Width, (int)uiImage.Size.Height));
+                }
 
                 sampleBuffer.Dispose();
-
-                GC.Collect();  // "Received memory warning." 回避
             }
             catch (Exception e)
             {
@@ -87,24 +91,12 @@ namespace Kobama.Xam.Plugin.Camera.iOS
                         cs,
                         (CGImageAlphaInfo)flags))
                     {
-                        var pixelData = new byte[pixelBuffer.Height * pixelBuffer.Width * 4];
-                        var rawData = System.Runtime.InteropServices.Marshal.AllocHGlobal((int)pixelBuffer.Height * (int)pixelBuffer.Width * 4);
-                        try
+                        // Get the image from the context
+                        using (var cgImage = context.ToImage())
                         {
-                            // var contextNew = new CGBitmapContext(rawData, pixelBuffer.Width, pixelBuffer.Height, 8, 4 * pixelBuffer.Width, CGColorSpace.CreateDeviceRGB(), (CGImageAlphaInfo)flags);
-                            // contextNew.DrawImage(new CGRect(0.0f, 0.0f, (float)pixelBuffer.Width, (float)pixelBuffer.Height), context.ToImage());
-                            System.Runtime.InteropServices.Marshal.Copy(pixelBuffer.BaseAddress, pixelData, 0, pixelData.Length);
-                            this.camera.NotifySavedIamage(pixelData, new Size((int)pixelBuffer.Width, (int)pixelBuffer.Height));
-                        }
-                        finally
-                        {
-                            System.Runtime.InteropServices.Marshal.FreeHGlobal(rawData);
-                        }
-
-                        using (var image = context.ToImage())
-                        {
+                            // Unlock and return image
                             pixelBuffer.Unlock(CVPixelBufferLock.None);
-                            return UIImage.FromImage(image);
+                            return UIImage.FromImage(cgImage, 100, this.camera.GetPhotoOrientation());
                         }
                     }
                 }

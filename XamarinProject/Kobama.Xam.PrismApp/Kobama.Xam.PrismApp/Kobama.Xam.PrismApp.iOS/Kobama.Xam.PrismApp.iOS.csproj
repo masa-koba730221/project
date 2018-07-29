@@ -222,7 +222,7 @@
       <Version>1.0.2</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>3.0.0.482510</Version>
+      <Version>3.1.0.637273</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -275,6 +275,14 @@
     <ProjectReference Include="..\..\Plugin\Gallary\Kobama.Xam.Plugin.Gallary.iOS\Kobama.Xam.Plugin.Gallary.iOS.csproj">
       <Project>{C7959D1B-3399-4403-9030-5AED43E90C1D}</Project>
       <Name>Kobama.Xam.Plugin.Gallary.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Dialog\Kobama.Xam.Plugin.Dialog\Kobama.Xam.Plugin.Dialog.csproj">
+      <Project>{FDEEA336-C28C-45B8-A459-C8DE2B6947FC}</Project>
+      <Name>Kobama.Xam.Plugin.Dialog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Dialog\Kobama.Xam.Plugin.Dialog.iOS\Kobama.Xam.Plugin.Dialog.iOS.csproj">
+      <Project>{883B6C3E-CF1F-48F4-ADF9-21F53E8E8A36}</Project>
+      <Name>Kobama.Xam.Plugin.Dialog.iOS</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

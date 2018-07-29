@@ -5,6 +5,7 @@
             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"             
             prism:ViewModelLocator.AutowireViewModel="True"
             Title="Top Page"
+             NavigationPage.BackButtonTitle=""
             >
     <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
         <Label Text="Welcome to Kobama World" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>

@@ -1,18 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              xmlns:camera="clr-namespace:Kobama.Xam.Plugin.CameraPreview;assembly=Kobama.Xam.Plugin.CameraPreview"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="Kobama.Xam.PrismApp.Views.FaceDetectorPage"
-             Title="Face Detector">
+             Title="Face Detector"
+             NavigationPage.BackButtonTitle=""
+             >
     
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{Binding TitleLensButton}" Command="{Binding CommandChangeLens}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <camera:CameraPreviewView x:Name="preview" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
+            <camera:CameraPreviewView
+                x:Name="preview"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                ImageMode = "EachFrame"
+                Lens = "Front"/>
             <Button Text="Shot" Command="{Binding CommandShot}"/>
         </StackLayout>
     </ContentPage.Content>

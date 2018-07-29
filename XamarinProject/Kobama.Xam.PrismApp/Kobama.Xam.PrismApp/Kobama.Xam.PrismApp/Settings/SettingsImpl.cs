@@ -16,7 +16,7 @@ namespace Kobama.Xam.PrismApp.Settings
         private const string KeyAzureFaceApiKey = "AzureFaceApiKey";
 
         private const string DefaultAzureFaceApiKey = "";
-        private const string DefaultAzureFaceApiRoot = "";
+        private const string DefaultAzureFaceApiRoot = "https://eastasia.api.cognitive.microsoft.com/face/v1.0/";
 
         /// <summary>
         /// Gets or sets the azure face API root.

@@ -8,6 +8,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using Android.App;
     using Android.Content;
     using Android.Graphics;
@@ -218,10 +219,38 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// <summary>
         /// Gets or sets the image mode.
         /// </summary>
-        /// <value>
-        /// The image mode.
-        /// </value>
-        public ImageAvailableMode ImageMode { get; set; } = ImageAvailableMode.Auto;
+        public ImageMode ImageMode { get; set; } = ImageMode.Photo;
+
+        /// <summary>
+        /// Gets or sets the lens.
+        /// </summary>
+        public CameraLens Lens
+        {
+            get
+            {
+                switch (this.lens)
+                {
+                    case LensFacing.Front:
+                        return CameraLens.Front;
+                    default:
+                    case LensFacing.Back:
+                        return CameraLens.Rear;
+                }
+            }
+
+            set
+            {
+                switch (value)
+                {
+                    case CameraLens.Front:
+                        this.lens = LensFacing.Front;
+                        break;
+                    default:
+                        this.lens = LensFacing.Back;
+                        break;
+                }
+            }
+        }
 
         /// <summary>
         /// Cast the specified obj.
@@ -280,6 +309,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// <param name="lens">Lens.</param>
         public void ChangeLens(Options.CameraLens lens)
         {
+            Log.CalledMethod();
             LensFacing requestLens;
 
             switch (lens)
@@ -415,10 +445,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// <param name="size">Size</param>
         public void NotifySavedIamage(byte[] image, System.Drawing.Size size)
         {
-            if (this.CallbackSavedImage != null)
-            {
-                this.CallbackSavedImage.Invoke(image, size);
-            }
+           this.CallbackSavedImage?.Invoke(image, size);
         }
 
         /// <summary>
@@ -449,7 +476,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
 
                 manager.OpenCamera(this.mCameraId, this.stateCallback, this.BackgroundHandler);
 
-                this.CallabckOpened.Invoke();
+                this.CallabckOpened?.Invoke();
             }
             catch (CameraAccessException e)
             {
@@ -560,19 +587,17 @@ namespace Kobama.Xam.Plugin.Camera.Droid
 
                 this.PreviewRequestBuilder.AddTarget(surface);
 
-                if (this.ImageMode == ImageAvailableMode.EachFrame)
+                if (this.ImageMode == ImageMode.EachFrame)
                 {
+                    Log.Debug("ImageMode: EachFrame");
                     this.imageReader = this.GetImageReaderForEachFrame(this.BackgroundHandler, new ImageAvailableListener(this));
                     this.PreviewRequestBuilder.AddTarget(this.imageReader.Surface);
                 }
                 else
                 {
+                    Log.Debug("ImageMode: other(Photo)");
                     this.imageReader = this.GetImageReader(this.BackgroundHandler, new ImageAvailableListener(this));
                 }
-
-                // var activity = (Activity)this.mContext;
-                // int rotation = (int)activity.WindowManager.DefaultDisplay.Rotation;
-                // this.PreviewRequestBuilder.Set(CaptureRequest.JpegOrientation, this.GetOrientation(rotation));
 
                 // Here, we create a CameraCaptureSession for camera preview.
                 var surfaces = new List<Surface>
@@ -732,8 +757,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             Log.CalledMethod();
             try
             {
-                var activity = (Activity)this.Context;
-                if (activity == null || this.CameraDevice == null)
+                if (this.CameraDevice == null || this.Context == null)
                 {
                     return;
                 }
@@ -745,8 +769,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
                 this.Setup3AControlLock(this.stillCaptureBuilder);
 
                 // Orientation
-                int rotation = (int)activity.WindowManager.DefaultDisplay.Rotation;
-                this.stillCaptureBuilder.Set(CaptureRequest.JpegOrientation, this.GetOrientation(rotation));
+                this.stillCaptureBuilder.Set(CaptureRequest.JpegOrientation, this.GetOrientation());
 
                 this.CaptureSession.StopRepeating();
                 this.CaptureSession.Capture(this.stillCaptureBuilder.Build(), new Camera2CaptureStillPictureSessionCallback(this), null);
@@ -894,6 +917,19 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         }
 
         /// <summary>
+        /// Gets the orientation.
+        /// </summary>
+        /// <returns>The orientation.</returns>
+        public int GetOrientation()
+        {
+            Log.CalledMethod();
+
+            var activity = (Activity)this.Context;
+            int rotation = (int)activity.WindowManager.DefaultDisplay.Rotation;
+            return (ORIENTATIONS.Get(rotation) + this.GetSensorOrientation() + 270) % 360;
+        }
+
+        /// <summary>
         /// Chooses the size of the optimal.
         /// </summary>
         /// <returns>The optimal size.</returns>
@@ -1029,7 +1065,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
         /// <returns>The image reader.</returns>
         /// <param name="handler">Handler.</param>
         /// <param name="listener">Listener.</param>
-        private ImageReader GetImageReader(Handler handler, ImageAvailableListener listener)
+        private ImageReader GetImageReader(Handler handler, ImageReader.IOnImageAvailableListener listener)
         {
             if (this.mCameraCharacteristics == null)
             {
@@ -1060,7 +1096,7 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             return reader;
         }
 
-        private ImageReader GetImageReaderForEachFrame(Handler handler, ImageAvailableListener listener)
+        private ImageReader GetImageReaderForEachFrame(Handler handler, ImageReader.IOnImageAvailableListener listener)
         {
             if (this.mCameraCharacteristics == null)
             {
@@ -1077,7 +1113,9 @@ namespace Kobama.Xam.Plugin.Camera.Droid
 
             // For still image captures, we use the largest available size.
             Android.Util.Size largest;
-            largest = new Android.Util.Size(640, 480);
+            var sizeList = map.GetOutputSizes((int)ImageFormatType.Yuv420888);
+            largest = (Android.Util.Size)Collections.Max(Arrays.AsList(sizeList), new CompareSizesByArea());
+            Log.CalledMethod($"Image Size: {largest.Width}, {largest.Height}");
 
             var reader = ImageReader.NewInstance(largest.Width, largest.Height, ImageFormatType.Yuv420888, /*maxImages*/2);
             reader.SetOnImageAvailableListener(listener, handler);
@@ -1198,22 +1236,6 @@ namespace Kobama.Xam.Plugin.Camera.Droid
             {
                 Log.Error(e.ToString());
             }
-        }
-
-        /// <summary>
-        /// Retrieves the JPEG orientation from the specified screen rotation.
-        /// </summary>
-        /// <returns>The orientation.</returns>
-        /// <param name="rotation">Rotation.</param>
-        private int GetOrientation(int rotation)
-        {
-            Log.CalledMethod();
-
-            // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
-            // We have to take that into account and rotate JPEG properly.
-            // For devices with orientation of 90, we simply return our mapping from ORIENTATIONS.
-            // For devices with orientation of 270, we need to rotate the JPEG 180 degrees.
-            return (ORIENTATIONS.Get(rotation) + this.GetSensorOrientation() + 270) % 360;
         }
      }
 }

@@ -5,14 +5,21 @@
              xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"             
              prism:ViewModelLocator.AutowireViewModel="True"
              Title="QR Code Reader"
-             x:Class="Kobama.Xam.PrismApp.Views.QRCodeReaderPage">
+             x:Class="Kobama.Xam.PrismApp.Views.QRCodeReaderPage"
+             NavigationPage.BackButtonTitle=""
+             >
 
     <ContentPage.ToolbarItems> 
         <ToolbarItem Text="{Binding TitleLensButton}" Command="{Binding CommandChangeLens}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <camera:CameraPreviewView x:Name="preview" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" />
+            <camera:CameraPreviewView
+                x:Name="preview"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                ImageMode = "EachFrame"
+                Lens = "Rear"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

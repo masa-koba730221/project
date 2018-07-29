@@ -27,15 +27,25 @@ namespace Kobama.Xam.Plugin.Gallary.iOS
         /// <returns>Saved Path</returns>
         public string SaveImage(byte[] image, Size size, string path, string fileName)
         {
-            var uiImage = new UIImage(NSData.FromArray(image));
-
-            // フォトアルバムに保存する
-            uiImage.SaveToPhotosAlbum((i, e) =>
+            try
             {
-                var o = i as UIImage;
-                Console.WriteLine("error:" + e?.LocalizedFailureReason + System.Environment.NewLine +
-                                             e?.LocalizedDescription);
-            });
+                var uiImage = new UIImage(NSData.FromArray(image));
+
+                // フォトアルバムに保存する
+                uiImage.SaveToPhotosAlbum((i, e) =>
+                {
+                    if (e != null)
+                    {
+                        var o = i as UIImage;
+                        Console.WriteLine("Imae Save Error:" + e?.LocalizedFailureReason + System.Environment.NewLine +
+                                                 e?.LocalizedDescription);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Image Save Error: {ex.Message}");
+            }
 
             return string.Empty;
         }

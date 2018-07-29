@@ -6,6 +6,7 @@
 
 using System.ComponentModel;
 using Android.Content;
+using Kobama.Xam.Plugin.Camera.Droid;
 using Kobama.Xam.Plugin.CameraPreview;
 using Kobama.Xam.Plugin.CameraPreview.Droid;
 using Kobama.Xam.Plugin.Log;
@@ -52,6 +53,8 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
             if (this.Control == null)
             {
                 this.cameraPreview = new CameraPreviewViewImpl(this.Context);
+                this.cameraPreview.Camera.Lens = this.Element.Lens;
+                this.cameraPreview.Camera.ImageMode = this.Element.ImageMode;
                 this.SetNativeControl(this.cameraPreview);
             }
 
@@ -74,8 +77,23 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
         /// <param name="e">E.</param>
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            base.OnElementPropertyChanged(sender, e);
             mLogger.CalledMethod();
+            base.OnElementPropertyChanged(sender, e);
+            if (this.Element == null || this.Control == null)
+            {
+                return;
+            }
+
+            if (e.PropertyName == CameraPreviewView.LensProperty.PropertyName)
+            {
+                mLogger.Debug($"{e.PropertyName.ToString()}: {this.Element.Lens}");
+                Camera2.Instance.Lens = this.Element.Lens;
+            }
+            else if (e.PropertyName == CameraPreviewView.ImageModeProperty.PropertyName)
+            {
+                mLogger.Debug($"{e.PropertyName.ToString()}: {this.Element.ImageMode}");
+                Camera2.Instance.ImageMode = this.Element.ImageMode;
+            }
         }
 
         /// <summary>

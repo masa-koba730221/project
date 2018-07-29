@@ -25,6 +25,8 @@ namespace Kobama.Xam.PrismApp.ViewModels
             INavigationService navigationService)
             : base(navigationService)
         {
+            this.Logger.CalledMethod();
+
             this.CommandStart = new DelegateCommand(async () =>
             {
                 this.Logger.Debug("Navigate to FaceDetectorPage");

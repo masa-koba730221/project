@@ -7,6 +7,7 @@ namespace Kobama.Xam.PrismApp.ViewModels
     using System;
     using System.Drawing;
     using Kobama.Xam.Plugin.Camera;
+    using Kobama.Xam.Plugin.Camera.Options;
     using Kobama.Xam.Plugin.Face;
     using Kobama.Xam.Plugin.Gallary;
     using Prism.Commands;
@@ -19,7 +20,8 @@ namespace Kobama.Xam.PrismApp.ViewModels
     /// <seealso cref="Kobama.Xam.PrismApp.ViewModels.CameraPageViewModel" />
     public class FaceDetectorPageViewModel : CameraPageViewModel
     {
-        private readonly IFaceDetectorService faceDetector;
+        private bool isSaved = false;
+        private IFaceDetectorService faceDetector;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FaceDetectorPageViewModel"/> class.
@@ -37,41 +39,51 @@ namespace Kobama.Xam.PrismApp.ViewModels
             IFaceDetectorService faceDetector)
             : base(navigationService, camera, gallary, device)
         {
+            this.isSaved = false;
             this.faceDetector = faceDetector;
-            this.faceDetector.ResutlFaceDetectorCallback += this.EventHandlerFaceDetector;
+            this.faceDetector.ResutlFaceDetectorCallback += this.FaceDetector_ResutlFaceDetectorCallback;
         }
 
         /// <summary>
-        /// Events the handler saved image.
+        /// Event Handler Save Image
         /// </summary>
         /// <param name="image">Image</param>
         /// <param name="size">Size</param>
         protected override void EventHandlerSavedImage(byte[] image, Size size)
         {
+            this.Logger.CalledMethod();
             this.faceDetector.Detector(image);
         }
 
-        private void EventHandlerFaceDetector(ResultFaceDtector result)
+        private void FaceDetector_ResutlFaceDetectorCallback(Plugin.Face.ResultFaceDtector result)
         {
             if (result.BoundingBoxs.Length > 0)
             {
-                foreach (var b in result.BoundingBoxs)
-                {
-                    this.Logger.Debug($"BoundingBox : {b.X},{b.Y},{b.Width},{b.Height}");
-                }
-
-                if (result.Image != null)
-                {
-                    try
-                    {
-                        this.SavedPath = this.GallaryService.SaveImage(result.Image, result.ImageSize, string.Empty, "photo");
-                    }
-                    catch (Exception ex)
-                    {
-                        this.Logger.Error(ex.Message);
-                    }
-                }
+                this.Logger.Debug("Face found");
             }
+            else
+            {
+                this.Logger.Debug("Face not found");
+            }
+
+            if (this.isSaved)
+            {
+                return;
+            }
+
+            this.isSaved = true;
+            this.DeviceService.BeginInvokeOnMainThread(() =>
+            {
+                try
+                {
+                    this.Logger.CalledMethod("Saved");
+                    this.SavedPath = this.GallaryService.SaveImage(result.Image, result.ImageSize, string.Empty, "photo");
+                }
+                catch (Exception ex)
+                {
+                    this.Logger.Error(ex.Message);
+                }
+            });
         }
     }
 }

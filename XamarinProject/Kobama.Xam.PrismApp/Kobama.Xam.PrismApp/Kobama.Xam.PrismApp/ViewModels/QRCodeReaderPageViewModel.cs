@@ -6,9 +6,11 @@
 
 namespace Kobama.Xam.PrismApp.ViewModels
 {
+    using System;
     using System.Drawing;
     using Kobama.Xam.Plugin.Camera;
     using Kobama.Xam.Plugin.Camera.Options;
+    using Kobama.Xam.Plugin.Gallary;
     using Kobama.Xam.Plugin.QRCode;
     using Prism.Commands;
     using Prism.Navigation;
@@ -17,7 +19,7 @@ namespace Kobama.Xam.PrismApp.ViewModels
     /// <summary>
     /// Main page view model.
     /// </summary>
-    public class QRCodeReaderPageViewModel : ViewModelBase
+    public class QRCodeReaderPageViewModel : CameraPageViewModel
     {
         private readonly IQRCodeControl qRCodeService;
 
@@ -25,17 +27,7 @@ namespace Kobama.Xam.PrismApp.ViewModels
 
         private readonly ICameraControl camera;
 
-        /// <summary>
-        /// The title lens button.
-        /// </summary>
-        private string titleLensButton;
-
-        /// <summary>
-        /// The lens mode.
-        /// </summary>
         private CameraLens lensMode = CameraLens.Rear;
-
-        private bool isDecoding;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QRCodeReaderPageViewModel"/> class.
@@ -44,24 +36,25 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// <param name="camera">Camera.</param>
         /// <param name="qrCode">QR Code</param>
         /// <param name="device">Device Service</param>
+        /// <param name="gallary">Gallary Service</param>
         public QRCodeReaderPageViewModel(
             INavigationService navigationService,
             ICameraControl camera,
             IQRCodeControl qrCode,
-            IDeviceService device)
-            : base(navigationService)
+            IDeviceService device,
+            IGallaryService gallary)
+            : base(navigationService, camera, gallary, device)
         {
             this.device = device;
 
             this.Title = "QR Code Reader";
             Result = string.Empty;
-            this.isDecoding = true;
             this.TitleLensButton = "Front";
             this.qRCodeService = qrCode;
+            this.qRCodeService.ResultQRCodeCallback += this.QRCodeService_ResultQRCodeCallback;
             this.camera = camera;
-            this.camera.ImageMode = ImageAvailableMode.EachFrame;
-            this.camera.CallabckOpened += this.EventHandelerCameraOpened;
-            this.camera.CallbackSavedImage += this.EventHandlerSavedImage;
+
+            this.lensMode = this.camera.Lens;
             this.CommandChangeLens = new DelegateCommand(() =>
             {
                 if (this.lensMode == CameraLens.Rear)
@@ -88,22 +81,6 @@ namespace Kobama.Xam.PrismApp.ViewModels
         public static string Result { get; set; }
 
         /// <summary>
-        /// Gets or sets the title lens button.
-        /// </summary>
-        /// <value>The title lens button.</value>
-        public string TitleLensButton
-        {
-            get { return this.titleLensButton; }
-            set { this.SetProperty(ref this.titleLensButton, value); }
-        }
-
-        /// <summary>
-        /// Gets the command change lens.
-        /// </summary>
-        /// <value>The command change lens.</value>
-        public DelegateCommand CommandChangeLens { get; }
-
-        /// <summary>
         /// On the resume.
         /// </summary>
         public override void OnResume()
@@ -126,53 +103,57 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// </summary>
         public override void Destroy()
         {
+            this.OnDisappearing();
             this.camera.OnDestroy();
         }
 
         /// <summary>
-        /// Events the handeler camera opened.
+        /// Ons the appearing.
         /// </summary>
-        private void EventHandelerCameraOpened()
+        public override void OnAppearing()
         {
-            this.Logger.CalledMethod();
-
-            var sizes = this.camera.GetSizeList();
-            foreach (var size in sizes)
-            {
-                this.Logger.Debug($"Size width:{size.Width}, height:{size.Height}");
-            }
-
-            var ranges = this.camera.GetFpsRangeList();
-            foreach (var range in ranges)
-            {
-                this.Logger.Debug($"Range lower:{range.Lower} upper:{range.Upper}");
-            }
+            base.OnAppearing();
+            this.CameraService.CallbackSavedImage += this.EventHandlerSavedImage;
         }
 
         /// <summary>
-        /// Events the handler saved image.
+        /// Ons the disappearing.
         /// </summary>
-        /// <param name="image">Image</param>
-        /// <param name="size">Size</param>
-        private void EventHandlerSavedImage(byte[] image, Size size)
+        public override void OnDisappearing()
         {
-            if (!this.isDecoding)
+            this.CameraService.CallbackSavedImage -= this.EventHandlerSavedImage;
+            base.OnDisappearing();
+        }
+
+        /// <summary>
+        /// Result QR Code callback.
+        /// </summary>
+        /// <param name="result">Result.</param>
+        protected void QRCodeService_ResultQRCodeCallback(string result)
+        {
+            Result = result;
+
+            if (string.IsNullOrEmpty(Result))
             {
                 return;
             }
 
-            var result = this.qRCodeService.Decode(image, size);
-            if (result != null)
+            this.device.BeginInvokeOnMainThread(async () =>
             {
-                this.isDecoding = false;
+                await this.NavigationService.GoBackAsync();
+            });
+        }
 
-                this.Logger.Debug($"QR Code : {result}");
-                Result = result;
-                this.device.BeginInvokeOnMainThread(async () =>
-                {
-                    await this.NavigationService.GoBackAsync();
-                });
-            }
+        /// <summary>
+        /// Event Handler Saved Image
+        /// </summary>
+        /// <param name="image">Image</param>
+        /// <param name="size">Save</param>
+        protected override void EventHandlerSavedImage(byte[] image, Size size)
+        {
+            this.Logger.CalledMethod();
+
+            this.qRCodeService.Decode(image, size);
         }
     }
 }

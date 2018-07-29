@@ -25,26 +25,24 @@ namespace Kobama.Xam.Plugin.Camera.iOS
     /// <seealso cref="Kobama.Xam.Plugin.Camera.ICameraControl" />
     public class Camera : ICameraControl
     {
-        private static readonly Logger Log = new Logger(nameof(Camera));
+        private readonly Logger logger = new Logger(nameof(Camera));
         private readonly float minZoom = 1.0f;
-        private CameraLens mLens = CameraLens.Rear;
         private float maxZoom;
         private AVCaptureVideoPreviewLayer mPreviewLayer;
-        private UIImageOrientation photoOrientation;
 
         private Camera()
         {
         }
 
         /// <summary>
-        /// Occurs when callback saved image.
-        /// </summary>
-        public event SavedImage CallbackSavedImage;
-
-        /// <summary>
         /// Occurs when callabck opened.
         /// </summary>
         public event Opened CallabckOpened;
+
+        /// <summary>
+        /// Occurs when callback received image.
+        /// </summary>
+        public event SavedImage CallbackSavedImage;
 
         /// <summary>
         /// Gets the instance.
@@ -116,7 +114,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
         /// <value>
         /// The image mode.
         /// </value>
-        public ImageAvailableMode ImageMode { get; set; } = ImageAvailableMode.EachFrame;
+        public ImageMode ImageMode { get; set; } = ImageMode.EachFrame;
 
         /// <summary>
         /// Gets or sets the camera view.
@@ -129,13 +127,16 @@ namespace Kobama.Xam.Plugin.Camera.iOS
         /// <summary>
         /// Gets the preview layer.
         /// </summary>
-        /// <value>
-        /// The preview layer.
-        /// </value>
         public AVCaptureVideoPreviewLayer PreviewLayer
         {
             get { return this.mPreviewLayer; }
         }
+
+        /// <summary>
+        /// Gets or sets the lens.
+        /// </summary>
+        /// <value>The lens.</value>
+        public CameraLens Lens { get; set; } = CameraLens.Front;
 
         /// <summary>
         /// Changes the lens.
@@ -143,10 +144,10 @@ namespace Kobama.Xam.Plugin.Camera.iOS
         /// <param name="lens">Lens.</param>
         public void ChangeLens(CameraLens lens)
         {
-            if (this.mLens != lens)
+            if (this.Lens != lens)
             {
                 this.CloseCamera();
-                this.mLens = lens;
+                this.Lens = lens;
                 this.OpenCamera();
             }
         }
@@ -221,11 +222,11 @@ namespace Kobama.Xam.Plugin.Camera.iOS
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Kobama.Xam.Plugin.Camera.Droid.Camera2"/> class.
+        /// Raiseds the image.
         /// </summary>
         /// <param name="image">Image.</param>
-        /// <param name="size">Size</param>
-        public void NotifySavedIamage(byte[] image, System.Drawing.Size size)
+        /// <param name="size">Size.</param>
+        public void RaisedImage(byte[] image, Size size)
         {
             this.CallbackSavedImage.Invoke(image, size);
         }
@@ -247,7 +248,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
 
             if (connection == null)
             {
-                Log.Error("Connection is null");
+                this.logger.Error("Connection is null");
                 return;
             }
 
@@ -255,35 +256,22 @@ namespace Kobama.Xam.Plugin.Camera.iOS
             {
                 var imageData = AVCaptureStillImageOutput.JpegStillToNSData(sampleBuffer);
                 var uiImage = new UIImage(imageData);
-
-                UIImageOrientation orientation = this.photoOrientation;
-                if (this.photoOrientation == UIImageOrientation.Down)
-                {
-                    uiImage = uiImage.RotateImage(180f);
-                    orientation = UIImageOrientation.Up;
-                }
-                else if (this.photoOrientation == UIImageOrientation.Left)
-                {
-                    uiImage = uiImage.RotateImage(270f);
-                    orientation = UIImageOrientation.Right;
-                }
-
                 var cgImage = uiImage.CGImage;
-                var newuiImage = new UIImage(cgImage, new nfloat(1.0), orientation);
+                var newuiImage = new UIImage(cgImage, new nfloat(1.0), this.GetPhotoOrientation());
                 if (newuiImage == null)
                 {
-                    Log.CalledMethod($"new UIImage is null");
+                    this.logger.CalledMethod($"new UIImage is null");
                 }
 
                 uiImage = newuiImage;
 
-                Log.CalledMethod($"uiImage orientation:{uiImage.Orientation.ToString()}");
+                this.logger.CalledMethod($"uiImage orientation:{uiImage.Orientation.ToString()}");
 
                 byte[] bytes = null;
                 using (var data = uiImage.AsJPEG())
                 {
                     bytes = data.ToArray();
-                    this.NotifySavedIamage(bytes, new Size((int)uiImage.Size.Width, (int)uiImage.Size.Height));
+                    this.RaisedImage(bytes, new Size((int)uiImage.Size.Width, (int)uiImage.Size.Height));
                 }
 
                 // These codes should be fixed with reference to http://hiro128.hatenablog.jp/entry/2017/09/13/203715
@@ -295,6 +283,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
         /// </summary>
         public void CloseCamera()
         {
+            this.logger.CalledMethod();
             if (this.CaptureSession == null)
             {
                 return;
@@ -340,6 +329,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
         /// </summary>
         public void OpenCamera()
         {
+            this.logger.CalledMethod();
             if (this.CaptureSession == null)
             {
                 this.CaptureSession = new AVCaptureSession();
@@ -358,6 +348,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
         /// </summary>
         public void Initialize()
         {
+            this.logger.CalledMethod();
             if (this.CaptureSession == null)
             {
                 return;
@@ -367,7 +358,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
 
             this.CaptureSession.SessionPreset = AVCaptureSession.PresetHigh;
 
-            var cameraPosition = (this.mLens == CameraLens.Front) ? AVCaptureDevicePosition.Front : AVCaptureDevicePosition.Back;
+            var cameraPosition = (this.Lens == CameraLens.Front) ? AVCaptureDevicePosition.Front : AVCaptureDevicePosition.Back;
             this.MainDevice = AVCaptureDevice.GetDefaultDevice(AVCaptureDeviceType.BuiltInDuoCamera, AVMediaType.Video, cameraPosition)
                 ?? AVCaptureDevice.GetDefaultDevice(AVCaptureDeviceType.BuiltInTrueDepthCamera, AVMediaType.Video, cameraPosition)
                 ?? AVCaptureDevice.GetDefaultDevice(AVCaptureDeviceType.BuiltInWideAngleCamera, AVMediaType.Video, cameraPosition);
@@ -380,7 +371,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
             this.MainDevice.LockForConfiguration(out NSError device_error);
             if (device_error != null)
             {
-                Console.WriteLine($"Error: {device_error.LocalizedDescription}");
+                this.logger.Error($"{device_error.LocalizedDescription}");
                 this.MainDevice.UnlockForConfiguration();
                 return;
             }
@@ -417,16 +408,19 @@ namespace Kobama.Xam.Plugin.Camera.iOS
                 this.StillOutput = null;
             }
 
-            if (this.ImageMode == ImageAvailableMode.EachFrame)
+            if (this.ImageMode == ImageMode.EachFrame)
             {
                 this.Output = new AVCaptureVideoDataOutput();
                 this.Queue = new DispatchQueue("myQueue");
                 this.Output.AlwaysDiscardsLateVideoFrames = true;
-                this.Recorder = new OutputRecorder(this);
-                this.Output.SetSampleBufferDelegateQueue(this.Recorder, this.Queue);
+
+                AVCaptureVideoDataOutputSampleBufferDelegate recoder;
+                recoder = new OutputRecorder(this);
+
+                this.Output.SetSampleBufferDelegateQueue(recoder, this.Queue);
                 var vSettings = new AVVideoSettingsUncompressed
                 {
-                    PixelFormatType = CVPixelFormatType.CV32BGRA
+                      PixelFormatType = CVPixelFormatType.CV32BGRA
                 };
                 this.Output.WeakVideoSettings = vSettings.Dictionary;
 
@@ -454,7 +448,7 @@ namespace Kobama.Xam.Plugin.Camera.iOS
             this.MainDevice.LockForConfiguration(out NSError device_error);
             if (device_error != null)
             {
-                Console.WriteLine($"Error: {device_error.LocalizedDescription}");
+                this.logger.Error($"{device_error.LocalizedDescription}");
                 this.MainDevice.UnlockForConfiguration();
                 return 1.0f;
             }
@@ -490,34 +484,95 @@ namespace Kobama.Xam.Plugin.Camera.iOS
 
                 if (connection.SupportsVideoOrientation)
                 {
+                    this.logger.Debug("device orientation: " + orientation);
                     switch (orientation)
                     {
                         case UIDeviceOrientation.Portrait:
                             connection.VideoOrientation = AVCaptureVideoOrientation.Portrait;
-                            this.photoOrientation = UIImageOrientation.Right;
                             break;
                         case UIDeviceOrientation.LandscapeRight:
                             connection.VideoOrientation = AVCaptureVideoOrientation.LandscapeLeft;
-                            this.photoOrientation = UIImageOrientation.Down;
                             break;
                         case UIDeviceOrientation.LandscapeLeft:
                             connection.VideoOrientation = AVCaptureVideoOrientation.LandscapeRight;
-                            this.photoOrientation = UIImageOrientation.Up;
                             break;
                         case UIDeviceOrientation.PortraitUpsideDown:
                             connection.VideoOrientation = AVCaptureVideoOrientation.PortraitUpsideDown;
-                            this.photoOrientation = UIImageOrientation.Down;
                             break;
                         default:
                             connection.VideoOrientation = AVCaptureVideoOrientation.Portrait;
-                            this.photoOrientation = UIImageOrientation.Right;
                             break;
                     }
 
-                    Log.CalledMethod($"Orientation: {connection.VideoOrientation.ToString()}");
+                    this.logger.CalledMethod($"Orientation: {connection.VideoOrientation.ToString()}");
                     this.mPreviewLayer.Frame = this.CameraView.Bounds;
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the photo orientation.
+        /// </summary>
+        /// <returns>The photo orientation.</returns>
+        public UIImageOrientation GetPhotoOrientation()
+        {
+            bool isBack = this.Input.Device.Position == AVCaptureDevicePosition.Back;
+            UIImageOrientation orientation;
+
+            var devOrientation = UIDevice.CurrentDevice.Orientation;
+
+            switch (devOrientation)
+            {
+                case UIDeviceOrientation.Portrait:
+                    if (isBack)
+                    {
+                        orientation = UIImageOrientation.Right;
+                    }
+                    else
+                    {
+                        orientation = UIImageOrientation.Right;
+                    }
+
+                    break;
+                case UIDeviceOrientation.LandscapeRight:
+                    if (isBack)
+                    {
+                        orientation = UIImageOrientation.Down;
+                    }
+                    else
+                    {
+                        orientation = UIImageOrientation.Up;
+                    }
+
+                    break;
+                case UIDeviceOrientation.LandscapeLeft:
+                    if (isBack)
+                    {
+                        orientation = UIImageOrientation.Up;
+                    }
+                    else
+                    {
+                        orientation = UIImageOrientation.Down;
+                    }
+
+                    break;
+                case UIDeviceOrientation.PortraitUpsideDown:
+                    if (isBack)
+                    {
+                        orientation = UIImageOrientation.Left;
+                    }
+                    else
+                    {
+                        orientation = UIImageOrientation.Left;
+                    }
+
+                    break;
+                default:
+                    orientation = UIImageOrientation.Right;
+                    break;
+            }
+
+            return orientation;
         }
     }
 }

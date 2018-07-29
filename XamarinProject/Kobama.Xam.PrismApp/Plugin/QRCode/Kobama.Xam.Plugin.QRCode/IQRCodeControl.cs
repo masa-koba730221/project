@@ -7,6 +7,8 @@ namespace Kobama.Xam.Plugin.QRCode
 {
     using System.Drawing;
 
+    public delegate void ResultQRCodeDelegate(string result);
+
     /// <summary>
     /// QR Code Control Interface Class
     /// </summary>
@@ -17,7 +19,12 @@ namespace Kobama.Xam.Plugin.QRCode
         /// </summary>
         /// <param name="image">The image.</param>
         /// <param name="size">The size.</param>
-        /// <returns>Decoded String</returns>
-        string Decode(byte[] image, Size size);
+        void Decode(byte[] image, Size size);
+
+        /// <summary>
+        /// Occurs when result of QRC ode callback.
+        /// </summary>
+        event ResultQRCodeDelegate ResultQRCodeCallback;
+
     }
 }

@@ -55,9 +55,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="zxing">
-      <HintPath>..\..\..\packages\ZXing.Net.0.16.4\lib\netstandard2.0\zxing.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -70,6 +67,10 @@
     <ProjectReference Include="..\Kobama.Xam.Plugin.QRCode\Kobama.Xam.Plugin.QRCode.csproj">
       <Project>{03AE9E0E-BDCF-4A8A-9E7F-F371AD7F6918}</Project>
       <Name>Kobama.Xam.Plugin.QRCode</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Logger\Kobama.Xam.Plugin.Log\Kobama.Xam.Plugin.Log.csproj">
+      <Project>{F0C94312-EDE3-4C58-8EC2-45CA35C27EB9}</Project>
+      <Name>Kobama.Xam.Plugin.Log</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

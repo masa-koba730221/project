@@ -61,6 +61,7 @@ namespace Kobama.Xam.PrismApp
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton(typeof(ISettingsService), typeof(SettingsImpl));
+            containerRegistry.Register(typeof(IAzureFaceApiService), typeof(AzureFaceApiImpl));
             containerRegistry.RegisterForNavigation<MyMasterDetailPage>();
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
@@ -73,6 +74,11 @@ namespace Kobama.Xam.PrismApp
             containerRegistry.RegisterForNavigation<AzureFaceApiDetectPage>();
             containerRegistry.RegisterForNavigation<FaceDetectorPage>();
             containerRegistry.RegisterForNavigation<FaceDetectorTopPage>();
+            containerRegistry.RegisterForNavigation<AzureFaceApiAddFacePage>();
+            containerRegistry.RegisterForNavigation<AzureFaceApiPersonGroupListPage>();
+            containerRegistry.RegisterForNavigation<AzureFaceApiFaceListPage>();
+            containerRegistry.RegisterForNavigation<AzureFaceApiPersonListPage>();
+            containerRegistry.RegisterForNavigation<AzureFaceApiIdentifyPage>();
         }
     }
 }

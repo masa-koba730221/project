@@ -12,7 +12,10 @@ namespace Kobama.Xam.Plugin.Face.iOS
     using CoreFoundation;
     using CoreGraphics;
     using CoreImage;
+    using CoreMedia;
+    using CoreVideo;
     using Foundation;
+    using ImageIO;
     using Kobama.Xam.Plugin.Log;
     using UIKit;
     using Vision;
@@ -182,6 +185,16 @@ namespace Kobama.Xam.Plugin.Face.iOS
                 {
                     // ClassificationLabel.Text = "No faces detected.";
                     this.logger.CalledMethod("No faces detected.");
+
+                    using (var data = this.rawImage.AsJPEG())
+                    {
+                        var list = new List<Rectangle>();
+                        var result = new ResultFaceDtector(
+                            list.ToArray(),
+                            data.ToArray(),
+                            new Size((int)this.rawImage.Size.Width, (int)this.rawImage.Size.Height));
+                        this.ResutlFaceDetectorCallback?.Invoke(result);
+                    }
                 });
                 return;
             }

@@ -55,6 +55,7 @@ namespace Kobama.Xam.PrismApp.Droid
                 container.Register(typeof(IQRCodeControl), typeof(QRCodeControlImpl));
                 container.Register(typeof(Plugin.Gallary.IGallaryService), typeof(Plugin.Gallary.Doid.GallaryImpl));
                 container.Register(typeof(IFaceDetectorService), typeof(FaceDetectorImpl));
+                container.Register(typeof(Plugin.Dialog.IEntryDialogService), typeof(Plugin.Dialog.Droid.EntryDialogImpl));
             }
         }
     }

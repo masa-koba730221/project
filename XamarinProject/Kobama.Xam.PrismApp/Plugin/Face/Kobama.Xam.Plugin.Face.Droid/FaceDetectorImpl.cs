@@ -39,9 +39,8 @@ namespace Kobama.Xam.Plugin.Face.Droid
             Android.Graphics.Color.Yellow
         };
 
-        private Logger logger = new Logger(nameof(FaceDetectorImpl));
+        private readonly Logger logger = new Logger(nameof(FaceDetectorImpl));
 
-        private Android.Graphics.Paint facePositionPaint;
         private Android.Graphics.Paint idPaint;
         private Android.Graphics.Paint boxPaint;
 
@@ -63,8 +62,10 @@ namespace Kobama.Xam.Plugin.Face.Droid
                                            .SetLandmarkType(LandmarkDetectionType.All)
                                            .SetMode(FaceDetectionMode.Accurate)
                                            .Build();
-            var bitmapOptions = new BitmapFactory.Options();
-            bitmapOptions.InMutable = true;
+            var bitmapOptions = new BitmapFactory.Options
+            {
+                InMutable = true
+            };
             var bitmap = BitmapFactory.DecodeByteArray(byteImage, 0, byteImage.Length, bitmapOptions);
             this.logger.CalledMethod($"Bitmap: {bitmap.Width}, {bitmap.Height}");
             var frame = new Frame.Builder().SetBitmap(bitmap).Build();
@@ -80,16 +81,16 @@ namespace Kobama.Xam.Plugin.Face.Droid
                     list.Add(face);
                     Console.WriteLine($"Face {face.Position.X},{face.Position.Y}");
                 }
-
-                this.OverlayRectangle(bitmap, list.ToArray());
             }
             else
             {
                 Console.WriteLine($"Face is not found");
             }
+
+            this.OverlayRectangle(bitmap, list.ToArray());
         }
 
-/// <summary>
+        /// <summary>
         /// Overlaies the rectangle.
         /// </summary>
         /// <param name="bitmap">Bitmap.</param>
@@ -101,12 +102,16 @@ namespace Kobama.Xam.Plugin.Face.Droid
             colorIndex = (colorIndex + 1) % this.colorChoices.Length;
             var selectedColor = this.colorChoices[colorIndex];
 
-            this.idPaint = new Paint();
-            this.idPaint.Color = selectedColor;
-            this.idPaint.TextSize = IdTextSize;
+            this.idPaint = new Paint
+            {
+                Color = selectedColor,
+                TextSize = IdTextSize
+            };
 
-            this.boxPaint = new Paint();
-            this.boxPaint.Color = selectedColor;
+            this.boxPaint = new Paint
+            {
+                Color = selectedColor
+            };
             this.boxPaint.SetStyle(Paint.Style.Stroke);
             this.boxPaint.StrokeWidth = BoxStrokeWidth;
 

@@ -1,19 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>Z:\Git\XamarinProject\Kobama.Xam.PrismApp\Backup\Plugin\Gallary\Kobama.Xam.Plugin.Gallary\</UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netstandard2.0\Kobama.Xam.Plugin.Gallary.xml</DocumentationFile>
   </PropertyGroup>
-
   <ItemGroup>
     <AdditionalFiles Include="..\..\..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
   </ItemGroup>
-
 </Project>

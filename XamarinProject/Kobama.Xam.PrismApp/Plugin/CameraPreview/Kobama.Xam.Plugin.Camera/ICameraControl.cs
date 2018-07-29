@@ -27,22 +27,24 @@ namespace Kobama.Xam.Plugin.Camera
     public interface ICameraControl
     {
         /// <summary>
-        /// Occurs when callback saved image.
-        /// </summary>
-        event SavedImage CallbackSavedImage;
-
-        /// <summary>
         /// Occurs when callabck opened.
         /// </summary>
         event Opened CallabckOpened;
 
         /// <summary>
+        /// Callback Saved Image
+        /// </summary>
+        event SavedImage CallbackSavedImage;
+
+        /// <summary>
         /// Gets or sets the image mode.
         /// </summary>
-        /// <value>
-        /// The image mode.
-        /// </value>
-        ImageAvailableMode ImageMode { get; set; }
+        ImageMode ImageMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the lens.
+        /// </summary>
+        CameraLens Lens { get; set; }
 
         /// <summary>
         /// Takes the picture.

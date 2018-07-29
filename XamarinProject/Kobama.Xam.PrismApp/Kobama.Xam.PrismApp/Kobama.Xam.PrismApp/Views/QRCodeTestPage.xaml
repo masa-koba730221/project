@@ -5,7 +5,10 @@
             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"             
             prism:ViewModelLocator.AutowireViewModel="True"
             Title="QR Code Test"
-            x:Class="Kobama.Xam.PrismApp.Views.QRCodeTestPage">
+            x:Class="Kobama.Xam.PrismApp.Views.QRCodeTestPage"
+            NavigationPage.BackButtonTitle=""
+            >
+    
     <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
         <Button Text="Start Scan" Command="{Binding CommandStartScan}"/>
         <Label Text="{Binding LabelResultScan}"/>

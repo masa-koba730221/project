@@ -10,6 +10,7 @@ namespace Kobama.Xam.Plugin.CameraPreview.iOS
     using AVFoundation;
     using CoreGraphics;
     using Foundation;
+    using Kobama.Xam.Plugin.Camera.Options;
     using Kobama.Xam.Plugin.Log;
     using UIKit;
 
@@ -32,6 +33,8 @@ namespace Kobama.Xam.Plugin.CameraPreview.iOS
         {
             Log.CalledMethod();
             this.mCamera = Camera.iOS.Camera.Instance;
+            this.mCamera.Lens = camera.Lens;
+            this.mCamera.ImageMode = camera.ImageMode;
             this.mCamera.CameraView = this;
             this.mCamera.OpenCamera();
             this.previewLayer = this.mCamera.PreviewLayer;
@@ -106,9 +109,12 @@ namespace Kobama.Xam.Plugin.CameraPreview.iOS
         /// </summary>
         protected virtual void OnTapped()
         {
-            Log.CalledMethod();
-            this.CameraControl.TakePicture();
-            this.Tapped?.Invoke(this, new EventArgs());
+            if (this.mCamera.ImageMode == ImageMode.Photo)
+            {
+                Log.CalledMethod();
+                this.CameraControl.TakePicture();
+                this.Tapped?.Invoke(this, new EventArgs());
+            }
         }
 
         /// <inheritdoc/>

@@ -41,9 +41,9 @@ namespace Kobama.Xam.PrismApp.ViewModels
 
             this.TitleLensButton = "Front";
             this.CameraService = camera;
-            this.CameraService.ImageMode = ImageAvailableMode.Auto;
-            this.CameraService.CallabckOpened += this.EventHandelerCameraOpened;
-            this.CameraService.CallbackSavedImage += this.EventHandlerSavedImage;
+            this.lensMode = camera.Lens;
+
+            // this.CameraService.ImageMode = ImageMode.Photo;
             this.CommandChangeLens = new DelegateCommand(() =>
             {
                 if (this.lensMode == CameraLens.Rear)
@@ -145,7 +145,31 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// </summary>
         public override void Destroy()
         {
+            this.Logger.CalledMethod();
             this.CameraService.OnDestroy();
+        }
+
+        /// <summary>
+        /// Ons the appearing.
+        /// </summary>
+        public override void OnAppearing()
+        {
+            this.Logger.CalledMethod();
+            base.OnAppearing();
+            this.CameraService.CallabckOpened += this.EventHandelerCameraOpened;
+
+            this.CameraService.CallbackSavedImage += this.EventHandlerSavedImage;
+        }
+
+        /// <summary>
+        /// Ons the disappearing.
+        /// </summary>
+        public override void OnDisappearing()
+        {
+            this.Logger.CalledMethod();
+            base.OnDisappearing();
+            this.CameraService.CallabckOpened -= this.EventHandelerCameraOpened;
+            this.CameraService.CallbackSavedImage -= this.EventHandlerSavedImage;
         }
 
         /// <summary>
@@ -169,14 +193,13 @@ namespace Kobama.Xam.PrismApp.ViewModels
         }
 
         /// <summary>
-        /// Events the handler saved image.
+        /// Event Handler Saved Image
         /// </summary>
         /// <param name="image">Image</param>
         /// <param name="size">Size</param>
         protected virtual void EventHandlerSavedImage(byte[] image, Size size)
         {
-            this.Logger.CalledMethod($"width:{size.Width} height:{size.Height}");
-
+            this.Logger.CalledMethod();
             try
             {
                 this.SavedPath = this.GallaryService.SaveImage(image, size, string.Empty, "photo");

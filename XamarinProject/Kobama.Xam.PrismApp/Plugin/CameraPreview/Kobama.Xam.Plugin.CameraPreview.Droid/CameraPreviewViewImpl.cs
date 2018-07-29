@@ -37,13 +37,19 @@ namespace Kobama.Xam.Plugin.CameraPreview.Droid
             Log.CalledMethod();
 
             this.mTextureView = new TextureView(context);
-            var camera = Camera2.Instance;
-            this.mTextureView.SurfaceTextureListener = new CameraPreviewSurfaceTextureListener(camera);
-            camera.Context = context;
-            camera.TextureView = this.mTextureView;
+            this.Camera = Camera2.Instance;
+            this.mTextureView.SurfaceTextureListener = new CameraPreviewSurfaceTextureListener(this.Camera);
+            this.Camera.Context = context;
+            this.Camera.TextureView = this.mTextureView;
 
             this.AddView(this.mTextureView);
         }
+
+        /// <summary>
+        /// Gets or sets the camera.
+        /// </summary>
+        /// <value>The camera.</value>
+        public Camera2 Camera { get; set; }
 
        /// <summary>
         /// Ons the layout.

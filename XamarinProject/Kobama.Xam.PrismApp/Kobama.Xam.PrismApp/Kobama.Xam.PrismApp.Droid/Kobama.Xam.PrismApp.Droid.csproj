@@ -57,30 +57,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Prism.DryIoc.Forms" Version="7.0.0.396" />
+    <PackageReference Include="Prism.DryIoc.Forms">
+      <Version>7.0.0.396</Version>
+    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.0.2</Version>
     </PackageReference>
+    <PackageReference Include="Plugin.CurrentActivity">
+      <Version>2.1.0.4</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Design">
-      <Version>27.0.2</Version>
+      <Version>27.0.2.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat">
-      <Version>27.0.2</Version>
+      <Version>27.0.2.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v4">
-      <Version>27.0.2</Version>
+      <Version>27.0.2.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v7.CardView">
-      <Version>27.0.2</Version>
+      <Version>27.0.2.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter">
-      <Version>27.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="Plugin.CurrentActivity">
-      <Version>2.1.0.2</Version>
+      <Version>27.0.2.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>3.0.0.482510</Version>
+      <Version>3.1.0.637273</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +166,14 @@
     <ProjectReference Include="..\..\Plugin\Gallary\Kobama.Xam.Plugin.Gallary.Doid\Kobama.Xam.Plugin.Gallary.Doid.csproj">
       <Project>{B2F8A3A5-3DCF-4E35-8574-B70C4B81D8C4}</Project>
       <Name>Kobama.Xam.Plugin.Gallary.Doid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Dialog\Kobama.Xam.Plugin.Dialog\Kobama.Xam.Plugin.Dialog.csproj">
+      <Project>{FDEEA336-C28C-45B8-A459-C8DE2B6947FC}</Project>
+      <Name>Kobama.Xam.Plugin.Dialog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Dialog\Kobama.Xam.Plugin.Dialog.Droid\Kobama.Xam.Plugin.Dialog.Droid.csproj">
+      <Project>{9F162317-ED74-4078-BC9E-DEB557011E9C}</Project>
+      <Name>Kobama.Xam.Plugin.Dialog.Droid</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

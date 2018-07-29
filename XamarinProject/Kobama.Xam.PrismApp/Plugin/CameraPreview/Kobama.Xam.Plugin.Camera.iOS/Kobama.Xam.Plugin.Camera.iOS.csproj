@@ -56,13 +56,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
-    <Folder Include="ClassExtensions\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="OutputRecorder.cs" />
     <Compile Include="ClassExtensions\UIImageExtensions.cs" />
+    <Compile Include="ClassExtensions\CGPointExtensions.cs" />
+    <Compile Include="ClassExtensions\CGRectExtensions.cs" />
+    <Compile Include="ClassExtensions\DictionaryExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kobama.Xam.Plugin.Camera\Kobama.Xam.Plugin.Camera.csproj">

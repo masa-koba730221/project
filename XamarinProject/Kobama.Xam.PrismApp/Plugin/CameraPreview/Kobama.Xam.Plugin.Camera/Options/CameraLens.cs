@@ -25,16 +25,16 @@ namespace Kobama.Xam.Plugin.Camera.Options
     /// <summary>
     /// Image Available Mode
     /// </summary>
-    public enum ImageAvailableMode
+    public enum ImageMode
     {
         /// <summary>
         /// The automatic
         /// </summary>
-        Auto,
+        Photo,
 
         /// <summary>
         /// The each frame
         /// </summary>
-        EachFrame
+        EachFrame,
     }
 }
