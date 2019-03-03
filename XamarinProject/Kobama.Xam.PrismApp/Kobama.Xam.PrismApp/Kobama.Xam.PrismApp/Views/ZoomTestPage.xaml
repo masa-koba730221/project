@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Kobama.Xam.PrismApp.Views"
+             Title="{Binding Title}"
+             x:Class="Kobama.Xam.PrismApp.Views.ZoomTestPage"
+             >
+    <ContentPage.Content>
+        <AbsoluteLayout >
+            <local:PinchToZoomContainer BackgroundColor="Olive" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <local:PinchToZoomContainer.Content>
+                    <Image Source="MonoMonkey.jpg" HeightRequest="768" WidthRequest="1024"/>
+                </local:PinchToZoomContainer.Content>
+            </local:PinchToZoomContainer>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

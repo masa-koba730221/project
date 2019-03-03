@@ -26,7 +26,6 @@ namespace Kobama.Xam.Plugin.QRCode.Droid
         /// <summary>
         /// Decode the specified image and size.
         /// </summary>
-        /// <returns>The decode.</returns>
         /// <param name="image">Image.</param>
         /// <param name="size">Size.</param>
         public void Decode(byte[] image, Size size)

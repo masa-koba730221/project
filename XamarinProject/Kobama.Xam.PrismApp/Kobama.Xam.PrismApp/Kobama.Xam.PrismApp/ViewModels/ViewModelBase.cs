@@ -89,30 +89,6 @@ namespace Kobama.Xam.PrismApp.ViewModels
         }
 
         /// <summary>
-        /// Ons the navigated from.
-        /// </summary>
-        /// <param name="parameters">Parameters.</param>
-        public virtual void OnNavigatedFrom(NavigationParameters parameters)
-        {
-        }
-
-        /// <summary>
-        /// Ons the navigated to.
-        /// </summary>
-        /// <param name="parameters">Parameters.</param>
-        public virtual void OnNavigatedTo(NavigationParameters parameters)
-        {
-        }
-
-        /// <summary>
-        /// Ons the navigating to.
-        /// </summary>
-        /// <param name="parameters">Parameters.</param>
-        public virtual void OnNavigatingTo(NavigationParameters parameters)
-        {
-        }
-
-        /// <summary>
         /// Destroy this instance.
         /// </summary>
         public virtual void Destroy()
@@ -150,6 +126,30 @@ namespace Kobama.Xam.PrismApp.ViewModels
         public virtual void OnDisappearing()
         {
             this.Logger.CalledMethod();
+        }
+
+        /// <summary>
+        /// Ons the navigated from.
+        /// </summary>
+        /// <param name="parameters">Parameters.</param>
+        public void OnNavigatedFrom(INavigationParameters parameters)
+        {
+        }
+
+        /// <summary>
+        /// Ons the navigated to.
+        /// </summary>
+        /// <param name="parameters">Parameters.</param>
+        public void OnNavigatedTo(INavigationParameters parameters)
+        {
+        }
+
+        /// <summary>
+        /// Ons the navigating to.
+        /// </summary>
+        /// <param name="parameters">Parameters.</param>
+        public void OnNavigatingTo(INavigationParameters parameters)
+        {
         }
     }
 }

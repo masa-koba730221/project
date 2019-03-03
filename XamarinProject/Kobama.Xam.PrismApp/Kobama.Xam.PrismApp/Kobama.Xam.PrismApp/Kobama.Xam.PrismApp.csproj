@@ -12,10 +12,10 @@
     <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Prism.DryIoc.Forms" Version="7.0.0.396" />
+    <PackageReference Include="Prism.DryIoc.Forms" Version="7.1.0.431" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
     <PackageReference Include="Torutek.Microsoft.ProjectOxford.Face" Version="1.2.0" />
-    <PackageReference Include="Xamarin.Forms" Version="3.1.0.637273" />
+    <PackageReference Include="Xamarin.Forms" Version="3.5.0.169047" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Plugin\CameraPreview\Kobama.Xam.Plugin.CameraPreview\Kobama.Xam.Plugin.CameraPreview.csproj" />
@@ -25,6 +25,11 @@
     <ProjectReference Include="..\..\Plugin\QRCode\Kobama.Xam.Plugin.QRCode\Kobama.Xam.Plugin.QRCode.csproj" />
     <ProjectReference Include="..\..\Plugin\Gallary\Kobama.Xam.Plugin.Gallary\Kobama.Xam.Plugin.Gallary.csproj" />
     <ProjectReference Include="..\..\Plugin\Dialog\Kobama.Xam.Plugin.Dialog\Kobama.Xam.Plugin.Dialog.csproj" />
+    <ProjectReference Include="..\..\Plugin\Draw\Kobama.Xam.Plugin.Draw\Kobama.Xam.Plugin.Draw.csproj" />
+    <ProjectReference Include="..\..\Plugin\CustomImage\Kobama.Xam.Plugin.CustomImage\Kobama.Xam.Plugin.CustomImage.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Views\ZoomTestPage2.xaml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Views\AzureFaceApiDetectPage.xaml">
@@ -57,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Settings\" />
+    <Folder Include="Views\Converters\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Views\AzureFaceApiRegistrationTopPage.xaml.cs" />

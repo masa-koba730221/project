@@ -7,6 +7,9 @@ namespace Kobama.Xam.Plugin.QRCode
 {
     using System.Drawing;
 
+    /// <summary>
+    /// Result QRC ode delegate.
+    /// </summary>
     public delegate void ResultQRCodeDelegate(string result);
 
     /// <summary>
@@ -25,6 +28,5 @@ namespace Kobama.Xam.Plugin.QRCode
         /// Occurs when result of QRC ode callback.
         /// </summary>
         event ResultQRCodeDelegate ResultQRCodeCallback;
-
     }
 }

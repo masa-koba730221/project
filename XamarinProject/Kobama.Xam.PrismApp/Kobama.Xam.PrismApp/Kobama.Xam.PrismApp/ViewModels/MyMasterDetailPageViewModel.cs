@@ -33,7 +33,9 @@ namespace Kobama.Xam.PrismApp.ViewModels
                 new MenuItem { Title = "FaceDetector",  Icon = string.Empty,    TargetPage = "FaceDetectorTopPage" },
                 new MenuItem { Title = "Azure",         Icon = "cloud.png",     TargetPage = "AzureTestPage" },
                 new MenuItem { Title = "Camera",        Icon = "camera.png",    TargetPage = "CameraTestPage" },
-                new MenuItem { Title = "QR Code",       Icon = "qr14.png",      TargetPage = "QRCodeTestPage" }
+                new MenuItem { Title = "QR Code",       Icon = "qr14.png",      TargetPage = "QRCodeTestPage" },
+                new MenuItem { Title = "PinchTest",     Icon = string.Empty,    TargetPage = "ZoomTestPage" },
+                new MenuItem { Title = "BitmapStreamTest", Icon = string.Empty, TargetPage = "BitmapStreamTestPage" }
             };
         }
 

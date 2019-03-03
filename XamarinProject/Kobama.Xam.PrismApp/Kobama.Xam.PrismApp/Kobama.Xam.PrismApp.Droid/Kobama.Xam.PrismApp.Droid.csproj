@@ -12,7 +12,7 @@
     <RootNamespace>Kobama.Xam.PrimsApp.Droid</RootNamespace>
     <AssemblyName>Kobama_Xam_PrimsApp.Droid</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -20,7 +20,6 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
     <AndroidStoreUncompressedFileExtensions />
     <MandroidI18n />
     <JavaMaximumHeapSize />
@@ -38,6 +37,8 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Kobama_Xam_PrimsApp.Droid.xml</DocumentationFile>
     <AndroidLinkMode>None</AndroidLinkMode>
+    <EnableProguard>true</EnableProguard>
+    <AndroidEnableMultiDex>true</AndroidEnableMultiDex>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Prism.DryIoc.Forms">
-      <Version>7.0.0.396</Version>
+      <Version>7.1.0.431</Version>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers">
       <Version>1.0.2</Version>
@@ -67,22 +68,22 @@
       <Version>2.1.0.4</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Design">
-      <Version>27.0.2.1</Version>
+      <Version>28.0.0.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v7.AppCompat">
-      <Version>27.0.2.1</Version>
+      <Version>28.0.0.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v4">
-      <Version>27.0.2.1</Version>
+      <Version>28.0.0.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v7.CardView">
-      <Version>27.0.2.1</Version>
+      <Version>28.0.0.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter">
-      <Version>27.0.2.1</Version>
+      <Version>28.0.0.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>3.1.0.637273</Version>
+      <Version>3.5.0.169047</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +108,7 @@
     <AndroidResource Include="Resources\drawable-hdpi\qr14.png" />
     <AndroidResource Include="Resources\drawable-hdpi\camera.png" />
     <AndroidResource Include="Resources\drawable-hdpi\cloud.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\MonoMonkey.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -174,6 +176,22 @@
     <ProjectReference Include="..\..\Plugin\Dialog\Kobama.Xam.Plugin.Dialog.Droid\Kobama.Xam.Plugin.Dialog.Droid.csproj">
       <Project>{9F162317-ED74-4078-BC9E-DEB557011E9C}</Project>
       <Name>Kobama.Xam.Plugin.Dialog.Droid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Draw\Kobama.Xam.Plugin.Draw\Kobama.Xam.Plugin.Draw.csproj">
+      <Project>{EA9B7A0E-722B-490C-AD6F-B056A53A76DC}</Project>
+      <Name>Kobama.Xam.Plugin.Draw</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\Draw\Kobama.Xam.Plugin.Draw.Droid\Kobama.Xam.Plugin.Draw.Droid.csproj">
+      <Project>{A6044C34-5B33-46A2-A2E4-C1510454A1DE}</Project>
+      <Name>Kobama.Xam.Plugin.Draw.Droid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\CustomImage\Kobama.Xam.Plugin.CustomImage\Kobama.Xam.Plugin.CustomImage.csproj">
+      <Project>{888C91D1-3A5F-4C69-BA46-A35D9766ADA9}</Project>
+      <Name>Kobama.Xam.Plugin.CustomImage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugin\CustomImage\Kobama.Xam.Plugin.CustomImage.Droid\Kobama.Xam.Plugin.CustomImage.Droid.csproj">
+      <Project>{601C1E4F-F167-46FC-9F71-A844FF48022A}</Project>
+      <Name>Kobama.Xam.Plugin.CustomImage.Droid</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

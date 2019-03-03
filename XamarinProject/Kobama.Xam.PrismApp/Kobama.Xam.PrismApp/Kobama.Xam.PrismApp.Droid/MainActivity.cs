@@ -11,6 +11,7 @@ namespace Kobama.Xam.PrismApp.Droid
     using Android.OS;
     using Kobama.Xam.Plugin.Camera;
     using Kobama.Xam.Plugin.Camera.Droid;
+    using Kobama.Xam.Plugin.CustomImage.Droid;
     using Kobama.Xam.Plugin.Face;
     using Kobama.Xam.Plugin.Face.Droid;
     using Kobama.Xam.Plugin.QRCode;
@@ -37,6 +38,16 @@ namespace Kobama.Xam.PrismApp.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+
+            var width = this.Resources.DisplayMetrics.WidthPixels;
+            var height = this.Resources.DisplayMetrics.HeightPixels;
+            var density = this.Resources.DisplayMetrics.Density;
+
+            App.ScreenWidth = (width - 0.5f) / density;
+            App.ScreenHeight = (height - 0.5f) / density;
+
+            var ir = new CustomImageRenderer(this);
+
             this.LoadApplication(new App(new AndroidInitializer()));
         }
 
@@ -56,6 +67,7 @@ namespace Kobama.Xam.PrismApp.Droid
                 container.Register(typeof(Plugin.Gallary.IGallaryService), typeof(Plugin.Gallary.Doid.GallaryImpl));
                 container.Register(typeof(IFaceDetectorService), typeof(FaceDetectorImpl));
                 container.Register(typeof(Plugin.Dialog.IEntryDialogService), typeof(Plugin.Dialog.Droid.EntryDialogImpl));
+                container.Register(typeof(Plugin.Draw.IDrawService), typeof(Plugin.Draw.Droid.DrawImplement));
             }
         }
     }

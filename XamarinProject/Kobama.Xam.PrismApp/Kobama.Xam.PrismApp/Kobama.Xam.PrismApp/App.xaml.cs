@@ -21,6 +21,9 @@ namespace Kobama.Xam.PrismApp
     /// </summary>
     public partial class App : PrismApplication
     {
+        public static double ScreenWidth;
+        public static double ScreenHeight;
+
         /*
          * The Xamarin Forms XAML Previewer in Visual Studio uses System.Activator.CreateInstance.
          * This imposes a limitation in which the App class must have a default constructor.
@@ -79,6 +82,8 @@ namespace Kobama.Xam.PrismApp
             containerRegistry.RegisterForNavigation<AzureFaceApiFaceListPage>();
             containerRegistry.RegisterForNavigation<AzureFaceApiPersonListPage>();
             containerRegistry.RegisterForNavigation<AzureFaceApiIdentifyPage>();
+            containerRegistry.RegisterForNavigation<ZoomTestPage>();
+            containerRegistry.RegisterForNavigation<BitmapStreamTestPage>();
         }
     }
 }

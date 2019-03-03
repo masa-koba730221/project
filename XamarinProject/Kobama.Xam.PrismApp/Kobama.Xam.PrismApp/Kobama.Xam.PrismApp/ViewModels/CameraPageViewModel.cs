@@ -66,6 +66,8 @@ namespace Kobama.Xam.PrismApp.ViewModels
             {
                 this.CameraService.TakePicture();
             });
+
+            this.CommandFlash = new DelegateCommand(() => { });
         }
 
         /// <summary>
@@ -93,6 +95,12 @@ namespace Kobama.Xam.PrismApp.ViewModels
         /// The command shot.
         /// </value>
         public DelegateCommand CommandShot { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the command flash.
+        /// </summary>
+        /// <value>The command flash.</value>
+        public DelegateCommand CommandFlash { get; protected set; }
 
         /// <summary>
         /// Gets or sets the saved path.
